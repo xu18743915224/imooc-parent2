@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.server.mapper.SysPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.imooc.server.model.bo.SysPermission">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <id column="pid" jdbcType="INTEGER" property="pid"/>
+        <id column="type" jdbcType="TINYINT" property="type"/>
+        <id column="name" jdbcType="VARCHAR" property="name"/>
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <id column="uri" jdbcType="VARCHAR" property="uri"/>
+        <id column="seq" jdbcType="INTEGER" property="seq"/>
+        <id column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <id column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <id column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <id column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, pid, type, name, code, uri, seq, create_user, create_time, update_user, update_time
+    </sql>
+
+    <!-- 组合条件查询 -->
+    <select id="querySysPermissionList" parameterType="com.imooc.server.model.bo.SysPermission"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_permission
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="pid  != null">
+                AND pid = #{pid ,jdbcType=INTEGER}
+            </if>
+            <if test="type  != null">
+                AND type = #{type ,jdbcType=TINYINT}
+            </if>
+            <if test="name  != null">
+                AND name = #{name ,jdbcType=VARCHAR}
+            </if>
+            <if test="code  != null">
+                AND code = #{code ,jdbcType=VARCHAR}
+            </if>
+            <if test="uri  != null">
+                AND uri = #{uri ,jdbcType=VARCHAR}
+            </if>
+            <if test="seq  != null">
+                AND seq = #{seq ,jdbcType=INTEGER}
+            </if>
+            <if test="createUser  != null">
+                AND create_user = #{createUser ,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime  != null">
+                AND create_time = #{createTime ,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUser  != null">
+                AND update_user = #{updateUser ,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime  != null">
+                AND update_time = #{updateTime ,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+</mapper>

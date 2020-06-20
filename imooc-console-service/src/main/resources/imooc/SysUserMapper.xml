@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.server.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.imooc.server.model.bo.SysUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <id column="username" jdbcType="VARCHAR" property="username"/>
+        <id column="password" jdbcType="VARCHAR" property="password"/>
+        <id column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <id column="email" jdbcType="VARCHAR" property="email"/>
+        <id column="status" jdbcType="TINYINT" property="status"/>
+        <id column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <id column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <id column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <id column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, password, nickname, email, status, create_user, create_time, update_user, update_time
+    </sql>
+
+    <!-- 组合条件查询 -->
+    <select id="querySysUserList" parameterType="com.imooc.server.model.bo.SysUser"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="username  != null">
+                AND username = #{username ,jdbcType=VARCHAR}
+            </if>
+            <if test="password  != null">
+                AND password = #{password ,jdbcType=VARCHAR}
+            </if>
+            <if test="nickname  != null">
+                AND nickname = #{nickname ,jdbcType=VARCHAR}
+            </if>
+            <if test="email  != null">
+                AND email = #{email ,jdbcType=VARCHAR}
+            </if>
+            <if test="status  != null">
+                AND status = #{status ,jdbcType=TINYINT}
+            </if>
+            <if test="createUser  != null">
+                AND create_user = #{createUser ,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime  != null">
+                AND create_time = #{createTime ,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUser  != null">
+                AND update_user = #{updateUser ,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime  != null">
+                AND update_time = #{updateTime ,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+</mapper>

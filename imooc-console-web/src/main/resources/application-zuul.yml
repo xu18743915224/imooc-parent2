@@ -1,0 +1,9 @@
+zuul:
+  routes: #路由的配置是个Map，可以配置多个
+    api-1:
+      path: /console/**                   #访问feign
+      serviceId: imooc-console-service    #feign注册在eureka的服务名
+    #api-1:
+      #path: /console/**              #访问网址(console开头的请求，都转发)
+      #url: http://localhost:8081/    #当访问localhost:9000/console/abc时，就相当于访问localhost:8081/abc.
+  sensitive-headers:  null  #设置敏感头设置为空，Authorization等请求头的请求，都往后转发

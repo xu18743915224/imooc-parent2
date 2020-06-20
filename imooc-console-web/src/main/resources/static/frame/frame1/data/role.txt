@@ -1,0 +1,7 @@
+﻿[
+	{"roleName":"行政部1", "id":"xz1", expanded: true},
+	{"roleName":"行政部2", "id":"xz2", expanded: true},
+	{"roleName":"行政部3", "id":"xz3", expanded: true},
+	{"roleName":"行政部4", "id":"xz4", expanded: true}
+	
+]

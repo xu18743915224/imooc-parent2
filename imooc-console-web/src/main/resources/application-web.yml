@@ -1,0 +1,11 @@
+spring:
+  mvc:
+    view:
+      prefix: /pages/
+      suffix: .html
+    # 静态文件访问路径，默认值为 /**
+    static-path-pattern: /static/**
+  thymeleaf:
+    prefix: classpath:/views/
+    suffix: .html
+    cache: false

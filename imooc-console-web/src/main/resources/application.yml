@@ -1,0 +1,15 @@
+#http://127.0.0.1:8881/static/frame/frame1/index.html   主页
+
+spring:
+  profiles:
+    include: web,zuul,eureka
+  application:
+    name: imooc-console-web
+
+server:
+  port: 8881
+
+
+
+
+

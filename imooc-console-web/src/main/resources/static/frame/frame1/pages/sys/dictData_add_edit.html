@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>字典管理</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script src="../../../../scripts/boot.js" type="text/javascript"></script>
+    <script src="../../js/common/pathUrl.js" type="text/javascript"></script>
+    <script src="../../js/common/common.js" type="text/javascript"></script>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<form id="form1" method="post">
+    <input name="id" class="mini-hidden"/>
+    <input name="dictType" id="dictTypeId" class="mini-hidden"/>
+    <div style="padding-left:11px;padding-bottom:5px;">
+        <table style="table-layout:fixed;">
+            <tr>
+                <td style="width:80px;">字典编码：</td>
+                <td style="width:150px;">
+                    <input name="dictCode" class="mini-textbox" required="true" emptyText="请输入字典编码"/>
+                </td>
+                <td style="width:80px;">字典名称：</td>
+                <td style="width:150px;">
+                    <input name="dictName" class="mini-textbox" emptyText="请输入字典名称"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">排序：</td>
+                <td style="width:150px;">
+                    <input name="no" class="mini-textbox" emptyText="请输入字典排序"/>
+                </td>
+                <td style="width:80px;">是否有效：</td>
+                <td style="width:150px;">
+                    <input class="mini-combobox" name="isValid" data-options={codeType:"IS_VALID"}
+                           textField="dictName" valueField="dictCode" emptyText="请选择..." allowInput="false" showNullItem="true" nullItemText="请选择..."/>
+                </td>
+            </tr>
+            <tr>
+                <td>备注：</td>
+                <td colspan="3">
+                    <input name="remark" class="mini-textarea" style="width:386px;"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="text-align:center;padding:10px;">
+        <a class="mini-button" onclick="onOk" style="width:60px;margin-right:20px;">确定</a>
+        <a class="mini-button" onclick="onCancel" style="width:60px;">取消</a>
+    </div>
+</form>
+<script type="text/javascript">
+    mini.parse();
+    var form = new mini.Form("form1");
+
+    //初始化数据
+    $(function () {
+        init();
+    });
+
+    function init() {
+        //获取下拉选字典AND列表字典
+        dictDataAction.getDictData("form1",dictData_queryDictDataByType);
+    }
+
+    function SaveData() {
+        var data = form.getData();
+        form.validate();
+        if (form.isValid() == false) return;
+        $.ajax({
+            url: dictData_saveOrUpdate,
+            type: 'post',
+            data: JSON.stringify(data),
+            contentType: "application/json;charset=utf-8",
+            success: function (text) {
+                if (text.code == 200) {
+                    alert("保存成功!");
+                    CloseWindow("save");
+                } else {
+                    alert(text.message);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText);
+                CloseWindow();
+            }
+        });
+    }
+
+    //标准方法接口定义
+    function SetData(data) {
+        if (data.action == "new") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            data = mini.clone(data);
+            //dictTypeId赋值
+            mini.get("dictTypeId").setValue(data.dictType);
+        }
+        if (data.action == "edit") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            data = mini.clone(data);
+            $.ajax({
+                url: dictData_saveOrUpdate + "/" + data.id,
+                cache: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    form.setData(o);
+                    form.setChanged(false);
+                }
+            });
+        }
+    }
+
+    function CloseWindow(action) {
+        if (action == "close" && form.isChanged()) {
+            if (confirm("数据被修改了，是否先保存？")) {
+                return false;
+            }
+        }
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+
+    function onOk(e) {
+        SaveData();
+    }
+
+    function onCancel(e) {
+        CloseWindow("cancel");
+    }
+</script>
+</body>
+</html>

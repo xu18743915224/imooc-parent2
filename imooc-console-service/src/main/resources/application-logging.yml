@@ -1,0 +1,14 @@
+#日志设置
+logging:
+  level:
+    root: info
+    com.wonders: debug
+    com.wondersgroup: debug
+    org.springframework.web: error
+    org.springframework.transaction: error
+    org.mybatis.spring.transaction: debug
+    org.apache.ibatis.session: debug
+  #配置日志输出类型
+  pattern:
+    console: "%highlight(%-5level) %d{HH:mm:ss} %highlight(%msg) - %boldGreen(%logger) %n"
+    file: "%d{HH:mm:ss.SSS} [%-5level][%thread] %logger{36} - %msg%n"

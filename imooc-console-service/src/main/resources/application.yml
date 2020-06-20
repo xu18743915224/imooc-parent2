@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    include: eureka,logging,database
+  application:
+    name: imooc-console-service
+
+server:
+  port: 8882
+
+
