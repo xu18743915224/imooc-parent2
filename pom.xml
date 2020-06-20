@@ -111,6 +111,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>imooc-eureka</module>
         <module>imooc-common</module>
         <module>imooc-console-interface</module>
         <module>imooc-console-service</module>
