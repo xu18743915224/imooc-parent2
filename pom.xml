@@ -110,6 +110,7 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- 子项目模块-->
     <modules>
         <module>imooc-eureka</module>
         <module>imooc-common</module>
