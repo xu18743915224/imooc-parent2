@@ -27,6 +27,7 @@ public class ZoolFilterConfig extends ZuulFilter {
 
         if (StringUtils.isNotBlank(token)) {
             requestContext.addZuulRequestHeader("Authorization", "Bearer " + token);
+
         }
 
         return null;
