@@ -38,6 +38,8 @@ var permission_queryById = basePath + "/console/permission/queryById";
 var permission_save = basePath + "/console/permission/saveOrUpdate";
 //删除
 var permission_delete = basePath + "/console/permission/delete";
+//权限授权角色
+var permission_permissionToRole = basePath + "/console/permission/permissionToRole";
 
 //-----------------------------------------------字典管理_dict
 //=====字典类型SysDictType

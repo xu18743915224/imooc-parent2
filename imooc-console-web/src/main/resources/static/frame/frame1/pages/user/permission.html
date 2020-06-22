@@ -69,11 +69,12 @@
         <div field="uri" width="100" headerAlign="center" align="center" allowSort="true">资源URI</div>
         <div field="seq" width="100" headerAlign="center" align="center" allowSort="true">序号</div>
         <div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
-        <div field="createTime" width="150" headerAlign="center" dateFormat="yyyy-MM-dd" align="center"
+        <div field="createTime" width="150" headerAlign="center" dataType="date" dateFormat="yyyy-MM-dd" align="center"
              allowSort="true">创建时间
         </div>
         <div field="updateUser" width="80" headerAlign="center" align="center" allowSort="true">更新人</div>
         <div field="updateTime" width="150" headerAlign="center" align="center" allowSort="true">更新时间</div>
+        <div name="action" width="100" headerAlign="center">操作</div>
     </div>
 </div>
 </body>
@@ -93,6 +94,27 @@
         dictDataAction.getDictData("form1",dictData_queryDictDataByType);
         dictDataAction.getAA10INfoDict("type","TYPE",dictData_queryDictDataByType);
     }
+
+    grid.on("drawcell", function (e) {
+        var record = e.record,
+            column = e.column,
+            field = e.field,
+            value = e.value;
+
+        //格式化日期
+        /*if (field == "updateTime") {
+            if (mini.isDate(value)){
+                e.cellHtml = mini.formatDate(value, "yyyy-MM-dd");
+            }
+        }*/
+
+        //action列，超连接操作按钮
+        if (column.name == "action") {
+            e.cellStyle = "text-align:center";
+            e.cellHtml = '<a href="javascript:auth(\'' + record.id + '\')">角色授权</a>&nbsp; ';
+        }
+
+    });
 
     //加载grid
     function loadGrid() {
@@ -191,5 +213,22 @@
     //列表获取字典数据赋值
     function getDictName(e){
         return dictDataAction.getAA10INfoDictInfo(e.column.field,e.value);
+    }
+
+    function auth(id) {
+        mini.open({
+            url: basePath + "/static/frame/frame1/pages/user/permission_auth.html",
+            title: "编辑", width: 1000, height: 500,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+                var data = {action: "auth", id: id};
+                iframe.contentWindow.SetData(data);
+
+            },
+            ondestroy: function (action) {
+                //var iframe = this.getIFrameEl();
+                grid.reload();
+            }
+        });
     }
 </script>

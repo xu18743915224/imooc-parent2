@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>角色管理</title>
+    <title>权限管理</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <script src="../../../../scripts/boot.js" type="text/javascript"></script>
     <script src="../../js/common/pathUrl.js" type="text/javascript"></script>
@@ -20,134 +20,136 @@
 </head>
 <body>
 
-
-<div class="mini-splitter" style="width:100%;height:100%;">
-    <div size="240" showCollapseButton="true">
-        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
-            <span style="padding-left:5px;">名称：</span>
-            <input class="mini-textbox" width="120"/>
-            <a class="mini-button" iconCls="icon-search" plain="true">查找</a>
-        </div>
-        <div class="mini-fit">
-            <ul id="tree1" class="mini-tree" url="../../data/role.txt" style="width:100%;"
-                showTreeIcon="true" textField="roleName" idField="id" parentField="pid" resultAsTree="false"
-
-            >
-            </ul>
-        </div>
+<form id="form1" method="post">
+    <input name="id" class="mini-hidden"/>
+    <div style="padding-left:11px;padding-bottom:5px;">
+        <table style="table-layout:fixed;">
+            <tr>
+                <td style="width:80px;">权限类型：</td>
+                <td style="width:150px;">
+                    <input class="mini-combobox" name="type" data-options={codeType:"TYPE"}
+                           textField="dictName" valueField="dictCode" emptyText="请选择..." allowInput="false" showNullItem="true" nullItemText="请选择..."/>
+                </td>
+                <td style="width:80px;">权限名称：</td>
+                <td style="width:150px;">
+                    <input name="name" class="mini-textbox" emptyText="请输入权限名称"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">资源标识：</td>
+                <td colspan="3">
+                    <input name="code" class="mini-textbox" emptyText="资源标识或者叫权限字符串例如(orders:add)" style="width:100%;"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">资源URL：</td>
+                <td style="width:150px;">
+                    <input name="uri" class="mini-textbox" required="true" required="true" emptyText="请输入资源URL"/>
+                </td>
+                <td style="width:80px;">序号：</td>
+                <td style="width:150px;">
+                    <input name="seq" class="mini-textbox" emptyText="请输入序号"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">创建人：</td>
+                <td style="width:150px;">
+                    <input name="createUser" class="mini-textbox" enabled="false"/>
+                </td>
+                <td style="width:80px;">创建时间：</td>
+                <td style="width:150px;">
+                    <input name="createTime" class="mini-datepicker" enabled="false"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:80px;">更新人：</td>
+                <td style="width:150px;">
+                    <input name="updateUser" class="mini-textbox" enabled="false"/>
+                </td>
+                <td style="width:80px;">更新时间：</td>
+                <td style="width:150px;">
+                    <input name="updateTime" class="mini-textbox" enabled="false"/>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div showCollapseButton="true">
-        <div class="mini-toolbar" style="padding:2px;border-top:0;border-left:0;border-right:0;">
-
-            <a class="mini-button" iconCls="icon-add" plain="true" onclick="addRow()">新增</a>
-            <a class="mini-button" iconCls="icon-remove" plain="true" onclick="removeRow()">删除</a>
-            <span class="separator"></span>
-            <a class="mini-button" iconCls="icon-save" plain="true" onclick="saveData()">保存</a>
-        </div>
-        <div class="mini-fit">
-            <div id="grid1" class="mini-datagrid" style="width:100%;height:100%;"
-                 borderStyle="border:0;"
-                 url="../data/AjaxService.aspx?method=GetDepartmentEmployees"
-                 showFilterRow="true" allowCellSelect="true" allowCellEdit="true"
-            >
-                <div property="columns">
-                    <div field="loginname" width="120" headerAlign="center" allowSort="true">员工帐号
-                        <input property="editor" class="mini-textbox" style="width:100%;"/>
-                    </div>
-                    <div field="name" width="120" headerAlign="center" allowSort="true">员工姓名
-                        <input property="editor" class="mini-textbox" style="width:100%;"/>
-                        <input id="nameFilter" property="filter" class="mini-textbox"
-                               onvaluechanged="onNameFilterChanged" style="width:100%;"/>
-                    </div>
-                    <div field="gender" width="100" allowSort="true" renderer="onGenderRenderer" align="center"
-                         headerAlign="center">性别
-                        <input property="editor" class="mini-combobox" style="width:100%;" data="Genders"/>
-                    </div>
-                    <div field="age" width="100" allowSort="true">年龄
-                        <input property="editor" class="mini-spinner" minValue="0" maxValue="200" value="25"
-                               style="width:100%;"/>
-                    </div>
-                    <div field="birthday" width="100" allowSort="true" dateFormat="yyyy-MM-dd">出生日期
-                        <input property="editor" class="mini-datepicker" style="width:100%;"/>
-                    </div>
-                    <div field="createtime" width="100" headerAlign="center" dateFormat="yyyy-MM-dd" allowSort="true">
-                        创建日期
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div style="text-align:center;padding:10px;">
+        <a class="mini-button" onclick="onOk" style="width:60px;margin-right:20px;">确定</a>
+        <a class="mini-button" onclick="onCancel" style="width:60px;">取消</a>
     </div>
-</div>
-
+</form>
 <script type="text/javascript">
     mini.parse();
+    var form = new mini.Form("form1");
 
-    var tree = mini.get("tree1");
-    var grid = mini.get("grid1");
-
-    tree.on("nodeselect", function (e) {
-
-        if (e.isLeaf) {
-            grid.load({dept_id: e.node.id});
-        } else {
-            grid.setData([]);
-            grid.setTotalCount(0);
-        }
+    //初始化数据
+    $(function () {
+        init();
     });
 
-    var Genders = [{id: 1, text: '男'}, {id: 2, text: '女'}];
-
-    function onGenderRenderer(e) {
-        for (var i = 0, l = Genders.length; i < l; i++) {
-            var g = Genders[i];
-            if (g.id == e.value) return g.text;
-        }
-        return "";
+    function init() {
+        //获取下拉选字典AND列表字典
+        dictDataAction.getDictData("form1",dictData_queryDictDataByType);
     }
 
-    function onNameFilterChanged(e) {
-        var textbox = e.sender;
-        var key = textbox.getValue();
-
-        var node = tree.getSelectedNode();
-        if (node) {
-            grid.load({dept_id: node.id, key: key});
-        }
-    }
-
-    function addRow() {
-        var node = tree.getSelectedNode();
-        if (node) {
-            var newRow = {name: "New Row"};
-            newRow.dept_id = node.id;
-            grid.addRow(newRow, 0);
-        }
-    }
-
-    function removeRow() {
-        var rows = grid.getSelecteds();
-        if (rows.length > 0) {
-            grid.removeRows(rows, true);
-        }
-    }
-
-    function saveData() {
-        var data = grid.getChanges();
-        var json = mini.encode(data);
-        grid.loading("保存中，请稍后......");
+    function SaveData() {
+        var data = form.getData();
+        form.validate();
+        if (form.isValid() == false) return;
         $.ajax({
-            url: "../data/AjaxService.aspx?method=SaveEmployees",
-            data: {data: json},
-            type: "post",
+            url: permission_save,
+            type: 'post',
+            data: JSON.stringify(data),
+            contentType: "application/json;charset=utf-8",
             success: function (text) {
-                grid.reload();
+                if (text.code == 200) {
+                    alert("保存成功!");
+                    CloseWindow("save");
+                } else {
+                    alert(text.message);
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseText);
+                CloseWindow();
             }
         });
     }
-</script>
 
+    //标准方法接口定义
+    function SetData(data) {
+        if (data.action == "edit") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            data = mini.clone(data);
+            $.ajax({
+                url: permission_queryById + "/" + data.id,
+                cache: false,
+                success: function (text) {
+                    var o = mini.decode(text);
+                    form.setData(o);
+                    form.setChanged(false);
+                }
+            });
+        }
+    }
+
+    function CloseWindow(action) {
+        if (action == "close" && form.isChanged()) {
+            if (confirm("数据被修改了，是否先保存？")) {
+                return false;
+            }
+        }
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+
+    function onOk(e) {
+        SaveData();
+    }
+
+    function onCancel(e) {
+        CloseWindow("cancel");
+    }
+</script>
 </body>
 </html>

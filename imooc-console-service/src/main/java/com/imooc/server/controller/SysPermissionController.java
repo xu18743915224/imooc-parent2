@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -100,5 +97,30 @@ public class SysPermissionController {
         }
         return BaseResponse.serviceException(new CommonServiceException(500, "删除失败！!"));
     }
+
+    /**
+     * @Description: 权限授权角色
+     * @return: boolean
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/permissionToRole")
+    public BaseResponse permissionToRole(@RequestParam SysPermissionVO sysPermissionVO, HttpServletRequest request) throws CommonServiceException {
+        // 校验入参
+        sysPermissionVO.checkParam();
+        //获取Claims
+        Claims claims = (Claims)request.getAttribute("user_claims");
+        String loginUsername=claims.getSubject();//获取登录用户username
+        //赋值
+        SysPermission sysPermission = new SysPermission();
+        BeanUtils.copyProperties(sysPermissionVO, sysPermission);
+
+        boolean bool = sysPermissionService.saveOrUpdate(sysPermission,loginUsername);
+        if (bool) {
+            return BaseResponse.success();
+        }
+        return BaseResponse.serviceException(new CommonServiceException(500, "保存失败！!"));
+    }
+
 
 }

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 权限表
@@ -30,6 +31,7 @@ public class SysPermissionVO extends BaseRequest implements Serializable {
     private Date createTime;  //
     private String updateUser;  //
     private Date updateTime;  //
+    private List<SysRoleVO> roleList;
 
     //分页信息
     private int pageSize = 20;
@@ -39,11 +41,6 @@ public class SysPermissionVO extends BaseRequest implements Serializable {
 
     @Override
     public void checkParam() throws CommonServiceException {
-        if (StringUtils.isEmpty(name)) {
-            throw new CommonServiceException(404, "权限名称不能为空!");
-        }
-        if (type==null) {
-            throw new CommonServiceException(404, "权限类型不能为空!");
-        }
+
     }
 }
