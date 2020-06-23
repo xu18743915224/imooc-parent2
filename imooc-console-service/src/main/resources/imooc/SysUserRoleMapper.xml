@@ -28,4 +28,40 @@
             </if>
         </where>
     </select>
+
+    <select id="queryUserRoleByRoleId" parameterType="com.imooc.server.model.dto.SysUserRoleDTO"
+            resultType="com.imooc.server.model.dto.SysUserRoleDTO">
+        SELECT
+        t1.id,
+        t1.user_id userId,
+        t2.username username,
+        t2.nickname nickname,
+        t1.role_id roleId
+        FROM
+        sys_user_role t1,sys_user t2
+        WHERE
+        t1.user_id=t2.id
+        <if test="query.roleId!= null">
+            AND t1.role_id = #{query.roleId}
+        </if>
+    </select>
+
+    <select id="queryNoAuthUserByRoleId" parameterType="com.imooc.server.model.dto.SysUserRoleDTO"
+            resultType="com.imooc.server.model.dto.SysUserRoleDTO">
+        SELECT
+        id userId,
+        username username,
+        nickname nickname
+        FROM
+        sys_user t
+        WHERE
+        t.id NOT IN
+        (SELECT user_id FROM sys_user_role
+        <where>
+            <if test="query.roleId!= null">
+                AND role_id = #{query.roleId}
+            </if>
+        </where>
+        )
+    </select>
 </mapper>

@@ -5,8 +5,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.server.mapper.SysRoleMapper;
+import com.imooc.server.mapper.SysUserRoleMapper;
 import com.imooc.server.model.bo.SysRole;
+import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysUserDTO;
+import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
+import com.imooc.server.model.vo.SysUserVO;
 import com.imooc.server.service.SysRoleService;
 import com.imooc.server.util.ColumnFieldUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 @Transactional
 @Service
@@ -24,7 +30,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Autowired
     SysRoleMapper sysRoleMapper;
-
+    @Autowired
+    SysUserRoleMapper sysUserRoleMapper;
 
     @Override
     public HashMap<String, Object> getListPage(SysRoleVO sysRoleVO) {
@@ -77,5 +84,44 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public boolean delete(Integer id) {
         return this.deleteById(id);
+    }
+
+    @Override
+    public List<SysUserRoleDTO> queryUserRoleByRoleId(Integer id) {
+        SysUserRoleDTO query=new SysUserRoleDTO();
+        query.setRoleId(id);
+        List<SysUserRoleDTO> list=sysUserRoleMapper.queryUserRoleByRoleId(query);
+        return list;
+    }
+
+    @Override
+    public List<SysUserRoleDTO> queryNoAuthUserByRoleId(Integer id) {
+        SysUserDTO query=new SysUserDTO();
+        query.setRoleId(id);
+        List<SysUserRoleDTO> list=sysUserRoleMapper.queryNoAuthUserByRoleId(query);
+        return list;
+    }
+
+    @Override
+    public boolean roleToUser(SysRoleVO sysRoleVO) {
+        //删除原有
+        QueryWrapper<SysUserRole> perQueryWrapper = new QueryWrapper();
+        perQueryWrapper.eq("role_id", sysRoleVO.getId());
+        List<SysUserRole> list = sysUserRoleMapper.selectList(perQueryWrapper);
+        if(list!=null&&list.size()>0){
+            for(SysUserRole userRole:list){
+                sysUserRoleMapper.deleteById(userRole.getId());
+            }
+        }
+        //新增现有
+        if(sysRoleVO.getUserList()!=null&&sysRoleVO.getUserList().size()>0){
+            for(SysUserVO user:sysRoleVO.getUserList()){
+                SysUserRole sysUserRole=new SysUserRole();
+                sysUserRole.setRoleId(sysRoleVO.getId());
+                sysUserRole.setUserId(user.getId());
+                sysUserRoleMapper.insert(sysUserRole);
+            }
+        }
+        return true;
     }
 }

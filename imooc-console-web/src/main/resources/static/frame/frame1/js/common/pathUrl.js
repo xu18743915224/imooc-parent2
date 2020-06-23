@@ -28,6 +28,12 @@ var role_queryById = basePath + "/console/role/queryById";
 var role_save = basePath + "/console/role/saveOrUpdate";
 //删除
 var role_delete = basePath + "/console/role/delete";
+//根据角色ID获取(用户角色表数据)
+var role_queryUserRoleByRoleId= basePath + "/console/role/queryUserRoleByRoleId/";
+//根据角色ID获取(用户未授权数据)
+var role_queryNoAuthUserByRoleId= basePath + "/console/role/queryNoAuthUserByRoleId/";
+//角色授权用户
+var role_roleToUser = basePath + "/console/role/roleToUser";
 
 //-----------------------------------------------权限管理_permission
 //分页查询

@@ -63,11 +63,11 @@
         <!--<div type="indexcolumn"></div>        -->
         <div type="checkcolumn"></div>
         <div field="id" width="50" headerAlign="center" align="center" allowSort="true">ID</div>
-        <div field="pid" width="100" headerAlign="center" align="center" allowSort="true">父ID</div>
+        <div field="pid" width="50" headerAlign="center" align="center" allowSort="true">父ID</div>
         <div field="type" width="100" headerAlign="center" align="center" allowSort="true" renderer="getDictName">权限类型</div>
         <div field="name" width="100" headerAlign="center" align="center" allowSort="true">权限名称</div>
         <div field="uri" width="100" headerAlign="center" align="center" allowSort="true">资源URI</div>
-        <div field="seq" width="100" headerAlign="center" align="center" allowSort="true">序号</div>
+        <div field="seq" width="50" headerAlign="center" align="center" allowSort="true">序号</div>
         <div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
         <div field="createTime" width="150" headerAlign="center" dataType="date" dateFormat="yyyy-MM-dd" align="center"
              allowSort="true">创建时间
@@ -111,7 +111,7 @@
         //action列，超连接操作按钮
         if (column.name == "action") {
             e.cellStyle = "text-align:center";
-            e.cellHtml = '<a href="javascript:auth(\'' + record.id + '\')">角色授权</a>&nbsp; ';
+            e.cellHtml = '<a href="javascript:auth(\'' + record.id + '\')">授权角色</a>&nbsp; ';
         }
 
     });
@@ -183,7 +183,7 @@
 
         var rows = grid.getSelecteds();
         if (rows.length > 0) {
-            if (confirm("确定删除选中记录？")) {
+            if (confirm("删除该权限同时会删除所授权的所有角色记录，确定删除选中记录？")) {
                 var ids = [];
                 for (var i = 0, l = rows.length; i < l; i++) {
                     var r = rows[i];

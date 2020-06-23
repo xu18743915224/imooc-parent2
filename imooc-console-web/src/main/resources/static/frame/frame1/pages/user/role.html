@@ -46,6 +46,7 @@
         </div>
         <div field="updateUser" width="80" headerAlign="center" align="center" allowSort="true">更新人</div>
         <div field="updateTime" width="150" headerAlign="center" align="center" allowSort="true">更新时间</div>
+        <div name="action" width="100" headerAlign="center">操作</div>
     </div>
 </div>
 </body>
@@ -68,6 +69,19 @@
         grid.setUrl(role_list);
         grid.load();
     }
+
+    grid.on("drawcell", function (e) {
+        var record = e.record,
+            column = e.column,
+            field = e.field,
+            value = e.value;
+        //action列，超连接操作按钮
+        if (column.name == "action") {
+            e.cellStyle = "text-align:center";
+            e.cellHtml = '<a href="javascript:auth(\'' + record.id + '\')">授权用户</a>&nbsp; ';
+        }
+
+    });
 
     //查询grid
     function search() {
@@ -148,5 +162,22 @@
         } else {
             alert("请选中一条记录");
         }
+    }
+
+    function auth(id) {
+        mini.open({
+            url: basePath + "/static/frame/frame1/pages/user/roleToUserAuth.html",
+            title: "编辑", width: 1000, height: 550,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+                var data = {action: "auth", id: id};
+                iframe.contentWindow.SetData(data);
+
+            },
+            ondestroy: function (action) {
+                //var iframe = this.getIFrameEl();
+                grid.reload();
+            }
+        });
     }
 </script>

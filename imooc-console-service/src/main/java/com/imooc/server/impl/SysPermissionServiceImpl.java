@@ -103,6 +103,16 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 
     @Override
     public boolean delete(Integer id) {
+        //根据权限ID删除所有(角色权限表)数据
+        QueryWrapper<SysRolePermission> perQueryWrapper = new QueryWrapper();
+        perQueryWrapper.eq("permission_id", id);
+        List<SysRolePermission> rolePermissionList = sysRolePermissionMapper.selectList(perQueryWrapper);
+        if(rolePermissionList!=null&&rolePermissionList.size()>0){
+            for(SysRolePermission rolePermission:rolePermissionList){
+                sysRolePermissionMapper.deleteById(rolePermission.getId());
+            }
+        }
+        //删除权限
         return this.deleteById(id);
     }
 

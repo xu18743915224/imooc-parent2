@@ -2,7 +2,10 @@ package com.imooc.server.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysUserDTO;
+import com.imooc.server.model.dto.SysUserRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +27,9 @@ public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {
      */
     List<SysUserRole> querySysUserRoleList(SysUserRole sysUserRole);
 
+    //根据角色ID获取(用户角色表数据)
+    List<SysUserRoleDTO> queryUserRoleByRoleId(@Param("query")SysUserRoleDTO query);
+
+    //根据角色ID获取(用户未授权数据)
+    List<SysUserRoleDTO> queryNoAuthUserByRoleId(@Param("query")SysUserDTO query);
 }

@@ -1,8 +1,11 @@
 package com.imooc.server.service;
 
 import com.imooc.server.model.bo.SysRole;
+import com.imooc.server.model.dto.SysUserDTO;
+import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
 import java.util.HashMap;
+import java.util.List;
 
 public interface SysRoleService {
 
@@ -40,4 +43,13 @@ public interface SysRoleService {
      * @Date: 2020-5-29 15:05
      */
     boolean delete(Integer id);
+
+    //根据角色ID获取(用户角色表数据)
+    List<SysUserRoleDTO> queryUserRoleByRoleId(Integer id);
+
+    //根据角色ID获取(没有授权用户表数据)
+    List<SysUserRoleDTO> queryNoAuthUserByRoleId(Integer id);
+
+    //角色授权用户
+    boolean roleToUser(SysRoleVO sysRoleVO);
 }

@@ -3,8 +3,12 @@ package com.imooc.server.controller;
 import com.imooc.server.common.BaseResponse;
 import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.model.bo.SysRole;
+import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysUserDTO;
+import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
 import com.imooc.server.service.SysRoleService;
+import com.imooc.server.service.SysUserRoleService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/role")
@@ -95,6 +100,54 @@ public class SysRoleController {
             return BaseResponse.success();
         }
         return BaseResponse.serviceException(new CommonServiceException(500, "删除失败！!"));
+    }
+
+    /**
+     * @Description: 角色授权用户
+     * @return: boolean
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/roleToUser")
+    public BaseResponse roleToUser(@RequestBody SysRoleVO sysRoleVO) throws CommonServiceException {
+        // 校验入参
+        sysRoleVO.checkParam2();
+
+        boolean bool = sysRoleServicei.roleToUser(sysRoleVO);
+        if (bool) {
+            return BaseResponse.success();
+        }
+        return BaseResponse.serviceException(new CommonServiceException(500, "保存失败！!"));
+    }
+
+    /**
+     * @Description: 根据角色ID获取(用户角色表数据)
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/queryUserRoleByRoleId/{id}")
+    public BaseResponse queryUserRoleByRoleId(@PathVariable("id") Integer id) throws CommonServiceException {
+        // 校验入参
+        if (id==null) {
+            throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
+        }
+        List<SysUserRoleDTO> list = sysRoleServicei.queryUserRoleByRoleId(id);
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * @Description: 根据角色ID获取(没有授权用户表数据)
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/queryNoAuthUserByRoleId/{id}")
+    public BaseResponse queryNoAuthUserByRoleId(@PathVariable("id") Integer id) throws CommonServiceException {
+        // 校验入参
+        if (id==null) {
+            throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
+        }
+        List<SysUserRoleDTO> list = sysRoleServicei.queryNoAuthUserByRoleId(id);
+        return BaseResponse.success(list);
     }
 
 }
