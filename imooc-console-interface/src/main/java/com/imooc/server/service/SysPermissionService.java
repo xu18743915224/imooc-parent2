@@ -1,6 +1,8 @@
 package com.imooc.server.service;
 
 import com.imooc.server.model.bo.SysPermission;
+import com.imooc.server.model.dto.SysRoleDTO;
+import com.imooc.server.model.dto.SysRolePermissionDTO;
 import com.imooc.server.model.vo.SysPermissionVO;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,4 +58,31 @@ public interface SysPermissionService {
      * @Date: 2020-5-29 15:08
      */
     List<SysPermission> findByUserId(Integer userId);
+
+    /**
+     * @Description: 权限授权角色
+     * @param: [sysPermissionVO]
+     * @return: boolean
+     * @Author: xwl
+     * @Date: 2020-6-23 13:20
+     */
+    boolean permissionToRole(SysPermissionVO sysPermissionVO);
+
+    /**
+     * @Description: 根据权限ID获取(角色权限表数据)
+     * @param: [id]
+     * @return: java.util.List<com.imooc.server.model.dto.SysRolePermissionDTO>
+     * @Author: xwl
+     * @Date: 2020-6-23 13:51
+     */
+    List<SysRolePermissionDTO> queryRolePermissByPermissId(Integer id);
+
+    /**
+     * @Description: 根据权限ID获取(角色未授权数据)
+     * @param: [id]
+     * @return: java.util.List<com.imooc.server.model.dto.SysRoleDTO>
+     * @Author: xwl
+     * @Date: 2020-6-23 18:03
+     */
+    List<SysRoleDTO> queryNoAuthRoleByPermissId(Integer id);
 }

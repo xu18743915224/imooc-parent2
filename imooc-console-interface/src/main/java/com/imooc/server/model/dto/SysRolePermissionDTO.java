@@ -18,4 +18,5 @@ public class SysRolePermissionDTO implements Serializable {
     private Integer id;  //
     private Integer roleId;  //角色ID
     private Integer permissionId;  //权限ID
+    private String roleName;
 }

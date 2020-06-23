@@ -29,4 +29,38 @@
         </where>
     </select>
 
+    <select id="queryRolePermissByPermissId" parameterType="com.imooc.server.model.dto.SysRolePermissionDTO"
+            resultType="com.imooc.server.model.dto.SysRolePermissionDTO">
+        SELECT
+        t1.id,
+        t1.role_id roleId,
+        t2.role_name roleName,
+        t1.permission_id permissionId
+        FROM
+        sys_role_permission t1,sys_role t2
+        WHERE
+        t1.role_id=t2.id
+        <if test="query.permissionId!= null">
+            AND t1.permission_id = #{query.permissionId}
+        </if>
+    </select>
+
+    <select id="queryNoAuthRoleByPermissId" parameterType="com.imooc.server.model.dto.SysRoleDTO"
+            resultType="com.imooc.server.model.dto.SysRoleDTO">
+        SELECT
+            id,
+            role_name roleName,
+            role_code roleCode
+        FROM
+            sys_role t
+        WHERE
+            t.id NOT IN
+            (SELECT role_id FROM sys_role_permission
+            <where>
+                <if test="query.permissionId!= null">
+                    AND permission_id = #{query.permissionId}
+                </if>
+            </where>
+            )
+    </select>
 </mapper>

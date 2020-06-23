@@ -41,6 +41,17 @@ public class SysPermissionVO extends BaseRequest implements Serializable {
 
     @Override
     public void checkParam() throws CommonServiceException {
+        if (StringUtils.isEmpty(name)) {
+            throw new CommonServiceException(404, "权限名称不能为空!");
+        }
+        if (type==null) {
+            throw new CommonServiceException(404, "权限类型不能为空!");
+        }
+    }
 
+    public void checkParam2() throws CommonServiceException {
+        if (id==null) {
+            throw new CommonServiceException(404, "出现异常,权限ID不能为空!");
+        }
     }
 }

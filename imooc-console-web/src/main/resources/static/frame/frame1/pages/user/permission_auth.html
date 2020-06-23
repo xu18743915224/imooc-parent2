@@ -26,8 +26,8 @@
         <td >
             角色未授权
             <div id="listbox1" class="mini-listbox" style="width:400px;height:400px;"
-                 textField="roleName" valueField="id" showCheckBox="true" multiSelect="true"
-                 url="../../data/countrys.txt">
+                 textField="roleName" valueField="id" showCheckBox="true" multiSelect="true">
+                <!-- url="../../data/countrys.txt">-->
 
             </div>
         </td>
@@ -43,20 +43,18 @@
             <div id="listbox2" class="mini-listbox" style="width:400px;height:400px;"
                  showCheckBox="true" multiSelect="true" >
                 <div property="columns">
-                    <div header="ID" field="id"></div>
+                    <div header="角色ID" field="id"></div>
                     <div header="角色名称" field="roleName"></div>
                 </div>
             </div>
         </td>
     </tr>
-    <tr>
-        <td align="center">
-            <input type="button" value="Save" onclick="saveData()" style="width:55px;"/>
-        </td>
-
-    </tr>
 </table>
-
+</br>
+<div style="text-align:center;padding:10px;">
+    <a class="mini-button" onclick="saveData()" style="width:60px;margin-right:20px;">保存</a>
+</div>
+</br>
 <script type="text/javascript">
     mini.parse();
     var listbox1 = mini.get("listbox1");
@@ -87,17 +85,25 @@
             //跨页面传递的数据对象，克隆后才可以安全使用
             data = mini.clone(data);
             mini.get("permissionId").setValue(data.id);
+            //角色未授权
+            noAuthList(data.id);
+            //角色已授权
+            yesAuthList(data.id);
         }
     }
+
     function saveData() {
         var data = listbox2.getData();
         var json = mini.encode(data);
         var permissionId=mini.get("permissionId").getValue();
-        //alert(json+"-----"+permissionId);
+        var permission=new Object();
+        var roleList=eval(json);
+        permission.id=permissionId;
+        permission.roleList=roleList;
         $.ajax({
             url: permission_permissionToRole,
             type: 'post',
-            data: {"permissionId":permissionId,"roleList":json},
+            data: JSON.stringify(permission),
             contentType: "application/json;charset=utf-8",
             success: function (text) {
                 if (text.code == 200) {
@@ -113,6 +119,40 @@
             }
         });
     }
+
+    function CloseWindow(action) {
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+
+    //角色未授权List
+    function noAuthList(id){
+        $.ajax({
+            url: permission_queryNoAuthRoleByPermissId + id,
+            cache: false,
+            success: function (text) {
+                listbox1.addItems(text.data);
+            }
+        });
+    }
+    //角色已授权List
+    function yesAuthList(id){
+        $.ajax({
+            url: permission_queryRolePermissByPermissId + id,
+            cache: false,
+            success: function (text) {
+                var roleArr=[];
+                text.data.forEach(function(item) {
+                    var role=new Object();
+                    role.id=item.roleId;
+                    role.roleName=item.roleName;
+                    roleArr.push(role);
+                });
+                listbox2.addItems(roleArr);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

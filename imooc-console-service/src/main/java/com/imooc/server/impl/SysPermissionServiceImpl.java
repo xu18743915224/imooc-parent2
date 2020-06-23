@@ -8,9 +8,13 @@ import com.imooc.server.mapper.SysPermissionMapper;
 import com.imooc.server.mapper.SysRolePermissionMapper;
 import com.imooc.server.mapper.SysUserRoleMapper;
 import com.imooc.server.model.bo.SysPermission;
+import com.imooc.server.model.bo.SysRole;
 import com.imooc.server.model.bo.SysRolePermission;
 import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysRoleDTO;
+import com.imooc.server.model.dto.SysRolePermissionDTO;
 import com.imooc.server.model.vo.SysPermissionVO;
+import com.imooc.server.model.vo.SysRoleVO;
 import com.imooc.server.service.SysPermissionService;
 import com.imooc.server.util.ColumnFieldUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -125,6 +129,46 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
             return null;
         }
         return sysPermissionList;
+    }
+
+    @Override
+    public boolean permissionToRole(SysPermissionVO sysPermissionVO) {
+        //删除原有
+        QueryWrapper<SysRolePermission> perQueryWrapper = new QueryWrapper();
+        perQueryWrapper.eq("permission_id", sysPermissionVO.getId());
+        List<SysRolePermission> rolePermissionList = sysRolePermissionMapper.selectList(perQueryWrapper);
+        if(rolePermissionList!=null&&rolePermissionList.size()>0){
+            for(SysRolePermission rolePermission:rolePermissionList){
+                sysRolePermissionMapper.deleteById(rolePermission.getId());
+            }
+        }
+        //新增现有
+        if(sysPermissionVO.getRoleList()!=null&&sysPermissionVO.getRoleList().size()>0){
+            for(SysRoleVO role:sysPermissionVO.getRoleList()){
+                SysRolePermission sysRolePermission=new SysRolePermission();
+                sysRolePermission.setPermissionId(sysPermissionVO.getId());
+                sysRolePermission.setRoleId(role.getId());
+                sysRolePermissionMapper.insert(sysRolePermission);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<SysRolePermissionDTO> queryRolePermissByPermissId(Integer id) {
+
+        SysRolePermissionDTO query=new SysRolePermissionDTO();
+        query.setPermissionId(id);
+        List<SysRolePermissionDTO> rolePermissionDTOList=sysRolePermissionMapper.queryRolePermissByPermissId(query);
+        return rolePermissionDTOList;
+    }
+
+    @Override
+    public List<SysRoleDTO> queryNoAuthRoleByPermissId(Integer id) {
+        SysRoleDTO query=new SysRoleDTO();
+        query.setPermissionId(id);
+        List<SysRoleDTO> roleList=sysRolePermissionMapper.queryNoAuthRoleByPermissId(query);
+        return roleList;
     }
 
 }

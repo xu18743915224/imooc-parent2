@@ -24,4 +24,5 @@ public class SysRoleDTO implements Serializable {
     private Date createTime;  //
     private String updateUser;  //
     private Date updateTime;  //
+    private Integer permissionId;
 }

@@ -43,7 +43,6 @@ var dictDataAction = {
         }
     },
     getAA10INfoDict: function (id,code,url) {
-        debugger
         index++;
         $.ajax({
             url: url + code,
@@ -58,7 +57,6 @@ var dictDataAction = {
         });
     },
     getAA10INfoDictInfo:function (code,value) {
-    debugger
         var  index = $.inArray(code+value,aa10Array);
         if(index>=0){
             return  aa10Array[index+1];

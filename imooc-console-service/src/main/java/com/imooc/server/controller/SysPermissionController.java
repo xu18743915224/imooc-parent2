@@ -3,6 +3,9 @@ package com.imooc.server.controller;
 import com.imooc.server.common.BaseResponse;
 import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.model.bo.SysPermission;
+import com.imooc.server.model.dto.SysPermissionDTO;
+import com.imooc.server.model.dto.SysRoleDTO;
+import com.imooc.server.model.dto.SysRolePermissionDTO;
 import com.imooc.server.model.vo.SysPermissionVO;
 import com.imooc.server.service.SysPermissionService;
 import io.jsonwebtoken.Claims;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/permission")
@@ -105,22 +109,46 @@ public class SysPermissionController {
      * @Date: 2020年05月29日
      */
     @RequestMapping(value = "/permissionToRole")
-    public BaseResponse permissionToRole(@RequestParam SysPermissionVO sysPermissionVO, HttpServletRequest request) throws CommonServiceException {
+    public BaseResponse permissionToRole(@RequestBody SysPermissionVO sysPermissionVO, HttpServletRequest request) throws CommonServiceException {
         // 校验入参
-        sysPermissionVO.checkParam();
-        //获取Claims
-        Claims claims = (Claims)request.getAttribute("user_claims");
-        String loginUsername=claims.getSubject();//获取登录用户username
-        //赋值
-        SysPermission sysPermission = new SysPermission();
-        BeanUtils.copyProperties(sysPermissionVO, sysPermission);
+        sysPermissionVO.checkParam2();
 
-        boolean bool = sysPermissionService.saveOrUpdate(sysPermission,loginUsername);
+        boolean bool = sysPermissionService.permissionToRole(sysPermissionVO);
         if (bool) {
             return BaseResponse.success();
         }
         return BaseResponse.serviceException(new CommonServiceException(500, "保存失败！!"));
     }
 
+    /**
+     * @Description: 根据权限ID获取(角色权限表数据)
+     * @return: boolean
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/queryRolePermissByPermissId/{id}")
+    public BaseResponse queryRolePermissByPermissId(@PathVariable("id") Integer id) throws CommonServiceException {
+        // 校验入参
+        if (id==null) {
+            throw new CommonServiceException(404, "出现异常,权限ID不能为空!");
+        }
+        List<SysRolePermissionDTO> list = sysPermissionService.queryRolePermissByPermissId(id);
+        return BaseResponse.success(list);
+    }
 
+/**
+ * @Description: 根据权限ID获取(角色权限表数据)
+ * @return: boolean
+ * @Author: XWL
+ * @Date: 2020年05月29日
+ */
+    @RequestMapping(value = "/queryNoAuthRoleByPermissId/{id}")
+    public BaseResponse queryNoAuthRoleByPermissId(@PathVariable("id") Integer id) throws CommonServiceException {
+        // 校验入参
+        if (id==null) {
+            throw new CommonServiceException(404, "出现异常,权限ID不能为空!");
+        }
+        List<SysRoleDTO> list = sysPermissionService.queryNoAuthRoleByPermissId(id);
+        return BaseResponse.success(list);
+    }
 }

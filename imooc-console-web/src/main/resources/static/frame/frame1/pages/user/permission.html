@@ -218,7 +218,7 @@
     function auth(id) {
         mini.open({
             url: basePath + "/static/frame/frame1/pages/user/permission_auth.html",
-            title: "编辑", width: 1000, height: 500,
+            title: "编辑", width: 1000, height: 550,
             onload: function () {
                 var iframe = this.getIFrameEl();
                 var data = {action: "auth", id: id};

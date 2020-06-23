@@ -40,6 +40,10 @@ var permission_save = basePath + "/console/permission/saveOrUpdate";
 var permission_delete = basePath + "/console/permission/delete";
 //权限授权角色
 var permission_permissionToRole = basePath + "/console/permission/permissionToRole";
+//根据权限ID获取(角色权限表数据)
+var permission_queryRolePermissByPermissId= basePath + "/console/permission/queryRolePermissByPermissId/";
+//根据权限ID获取(角色未授权数据)
+var permission_queryNoAuthRoleByPermissId= basePath + "/console/permission/queryNoAuthRoleByPermissId/";
 
 //-----------------------------------------------字典管理_dict
 //=====字典类型SysDictType
