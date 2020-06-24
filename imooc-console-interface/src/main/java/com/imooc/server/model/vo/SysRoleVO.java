@@ -28,7 +28,7 @@ public class SysRoleVO extends BaseRequest implements Serializable {
     private Date createTime;  //
     private String updateUser;  //
     private Date updateTime;  //
-    private List<SysUserVO> userList;
+
 
     //分页信息
     private int pageSize = 20;
@@ -46,9 +46,4 @@ public class SysRoleVO extends BaseRequest implements Serializable {
         }
     }
 
-    public void checkParam2() throws CommonServiceException {
-        if (id==null) {
-            throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
-        }
-    }
 }

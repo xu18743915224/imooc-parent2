@@ -4,6 +4,8 @@ import com.imooc.server.model.bo.SysRole;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
+import com.imooc.server.model.vo.SysUserRoleVO;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,5 +53,5 @@ public interface SysRoleService {
     List<SysUserRoleDTO> queryNoAuthUserByRoleId(Integer id);
 
     //角色授权用户
-    boolean roleToUser(SysRoleVO sysRoleVO);
+    boolean roleToUser(SysUserRoleVO sysUserRoleVO);
 }

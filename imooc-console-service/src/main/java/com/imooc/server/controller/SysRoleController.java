@@ -7,6 +7,7 @@ import com.imooc.server.model.bo.SysUserRole;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
+import com.imooc.server.model.vo.SysUserRoleVO;
 import com.imooc.server.service.SysRoleService;
 import com.imooc.server.service.SysUserRoleService;
 import io.jsonwebtoken.Claims;
@@ -109,11 +110,11 @@ public class SysRoleController {
      * @Date: 2020年05月29日
      */
     @RequestMapping(value = "/roleToUser")
-    public BaseResponse roleToUser(@RequestBody SysRoleVO sysRoleVO) throws CommonServiceException {
+    public BaseResponse roleToUser(@RequestBody SysUserRoleVO sysUserRoleVO) throws CommonServiceException {
         // 校验入参
-        sysRoleVO.checkParam2();
+        sysUserRoleVO.checkParam2();
 
-        boolean bool = sysRoleServicei.roleToUser(sysRoleVO);
+        boolean bool = sysRoleServicei.roleToUser(sysUserRoleVO);
         if (bool) {
             return BaseResponse.success();
         }

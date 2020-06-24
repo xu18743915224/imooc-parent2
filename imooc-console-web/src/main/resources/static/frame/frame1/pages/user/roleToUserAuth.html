@@ -27,7 +27,7 @@
             未授权用户
             <div id="listbox1" class="mini-listbox" style="width:400px;height:400px;" showCheckBox="true" multiSelect="true">
                 <div property="columns">
-                    <div header="用户ID" field="id"></div>
+                    <div header="用户ID" field="userId"></div>
                     <div header="账号" field="username"></div>
                     <div header="昵称" field="nickname"></div>
                 </div>
@@ -45,7 +45,7 @@
             已授权用户
             <div id="listbox2" class="mini-listbox" style="width:400px;height:400px;" showCheckBox="true" multiSelect="true" >
                 <div property="columns">
-                    <div header="用户ID" field="id"></div>
+                    <div header="用户ID" field="userId"></div>
                     <div header="账号" field="username"></div>
                     <div header="昵称" field="nickname"></div>
                 </div>
@@ -99,14 +99,14 @@
         var data = listbox2.getData();
         var json = mini.encode(data);
         var roleId=mini.get("roleId").getValue();
-        var role=new Object();
+        var userRole=new Object();
         var userList=eval(json);
-        role.id=roleId;
-        role.userList=userList;
+        userRole.roleId=roleId;
+        userRole.userList=userList;
         $.ajax({
             url: role_roleToUser,
             type: 'post',
-            data: JSON.stringify(role),
+            data: JSON.stringify(userRole),
             contentType: "application/json;charset=utf-8",
             success: function (text) {
                 if (text.code == 200) {
@@ -134,15 +134,7 @@
             url: role_queryNoAuthUserByRoleId + id,
             cache: false,
             success: function (text) {
-                var userArr=[];
-                text.data.forEach(function(item) {
-                    var user=new Object();
-                    user.id=item.userId;
-                    user.username=item.username;
-                    user.nickname=item.nickname;
-                    userArr.push(user);
-                });
-                listbox1.addItems(userArr);
+                listbox1.addItems(text.data);
             }
         });
     }
@@ -152,14 +144,6 @@
             url: role_queryUserRoleByRoleId + id,
             cache: false,
             success: function (text) {
-                var userArr=[];
-                text.data.forEach(function(item) {
-                    var user=new Object();
-                    user.id=item.userId;
-                    user.username=item.username;
-                    user.nickname=item.nickname;
-                    userArr.push(user);
-                });
                 listbox2.addItems(text.data);
             }
         });

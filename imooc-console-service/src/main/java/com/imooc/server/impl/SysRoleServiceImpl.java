@@ -11,6 +11,7 @@ import com.imooc.server.model.bo.SysUserRole;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
+import com.imooc.server.model.vo.SysUserRoleVO;
 import com.imooc.server.model.vo.SysUserVO;
 import com.imooc.server.service.SysRoleService;
 import com.imooc.server.util.ColumnFieldUtil;
@@ -83,6 +84,16 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
 
     @Override
     public boolean delete(Integer id) {
+        //根据权限ID删除所有(角色权限表)数据
+        QueryWrapper<SysUserRole> wrapper = new QueryWrapper();
+        wrapper.eq("role_id", id);
+        List<SysUserRole> list = sysUserRoleMapper.selectList(wrapper);
+        if(list!=null&&list.size()>0){
+            for(SysUserRole obj:list){
+                sysUserRoleMapper.deleteById(obj.getId());
+            }
+        }
+        //删除角色
         return this.deleteById(id);
     }
 
@@ -103,10 +114,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     @Override
-    public boolean roleToUser(SysRoleVO sysRoleVO) {
+    public boolean roleToUser(SysUserRoleVO sysUserRoleVO) {
         //删除原有
         QueryWrapper<SysUserRole> perQueryWrapper = new QueryWrapper();
-        perQueryWrapper.eq("role_id", sysRoleVO.getId());
+        perQueryWrapper.eq("role_id", sysUserRoleVO.getRoleId());
         List<SysUserRole> list = sysUserRoleMapper.selectList(perQueryWrapper);
         if(list!=null&&list.size()>0){
             for(SysUserRole userRole:list){
@@ -114,11 +125,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             }
         }
         //新增现有
-        if(sysRoleVO.getUserList()!=null&&sysRoleVO.getUserList().size()>0){
-            for(SysUserVO user:sysRoleVO.getUserList()){
+        if(sysUserRoleVO.getUserList()!=null&&sysUserRoleVO.getUserList().size()>0){
+            for(SysUserRoleVO userRole:sysUserRoleVO.getUserList()){
                 SysUserRole sysUserRole=new SysUserRole();
-                sysUserRole.setRoleId(sysRoleVO.getId());
-                sysUserRole.setUserId(user.getId());
+                sysUserRole.setRoleId(sysUserRoleVO.getRoleId());
+                sysUserRole.setUserId(userRole.getUserId());
                 sysUserRoleMapper.insert(sysUserRole);
             }
         }
