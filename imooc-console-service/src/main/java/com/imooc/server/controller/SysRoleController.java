@@ -38,7 +38,7 @@ public class SysRoleController {
      * @Author: xwl
      * @Date: 2020-6-4 16:58
      */
-    @RequestMapping(value = "/getListPage")
+    @RequestMapping(value = "/getListPage", name = "role_getListPage")
     HashMap<String, Object> getListPage(HttpServletRequest request) {
         SysRoleVO sysRoleVO = new SysRoleVO();
         sysRoleVO.setRoleName(request.getParameter("roleName"));
@@ -70,7 +70,7 @@ public class SysRoleController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/saveOrUpdate")
+    @RequestMapping(value = "/saveOrUpdate", name = "role_saveOrUpdate")
     public BaseResponse saveOrUpdate(@RequestBody SysRoleVO sysRoleVO,HttpServletRequest request) throws CommonServiceException {
         // 校验入参
         sysRoleVO.checkParam();
@@ -94,7 +94,7 @@ public class SysRoleController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/delete/{id}")
+    @RequestMapping(value = "/delete/{id}", name = "role_delete")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysRoleServicei.delete(id);
         if (bool) {
@@ -109,7 +109,7 @@ public class SysRoleController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/roleToUser")
+    @RequestMapping(value = "/roleToUser", name = "role_roleToUser")
     public BaseResponse roleToUser(@RequestBody SysUserRoleVO sysUserRoleVO) throws CommonServiceException {
         // 校验入参
         sysUserRoleVO.checkParam2();

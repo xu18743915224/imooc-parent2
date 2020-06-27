@@ -34,7 +34,7 @@ public class SysPermissionController {
      * @Author: xwl
      * @Date: 2020-6-4 16:58
      */
-    @RequestMapping(value = "/getListPage")
+    @RequestMapping(value = "/getListPage", name = "permission_getListPage")
     HashMap<String, Object> getListPage(HttpServletRequest request) {
         SysPermissionVO sysPermissionVO = new SysPermissionVO();
         if(StringUtils.isNotBlank(request.getParameter("type"))){
@@ -69,7 +69,7 @@ public class SysPermissionController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/saveOrUpdate")
+    @RequestMapping(value = "/saveOrUpdate", name = "permission_saveOrUpdate")
     public BaseResponse saveOrUpdate(@RequestBody SysPermissionVO sysPermissionVO,HttpServletRequest request) throws CommonServiceException {
         // 校验入参
         sysPermissionVO.checkParam();
@@ -93,7 +93,7 @@ public class SysPermissionController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/delete/{id}", name = "API-PERMISSION-DELETE")
+    @RequestMapping(value = "/delete/{id}", name = "permission_delete")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysPermissionService.delete(id);
         if (bool) {
@@ -108,7 +108,7 @@ public class SysPermissionController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/permissionToRole")
+    @RequestMapping(value = "/permissionToRole", name = "permission_permissionToRole")
     public BaseResponse permissionToRole(@RequestBody SysPermissionVO sysPermissionVO, HttpServletRequest request) throws CommonServiceException {
         // 校验入参
         sysPermissionVO.checkParam2();

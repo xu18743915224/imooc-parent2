@@ -50,7 +50,7 @@ public class SysUserController {
      * @Author: xwl
      * @Date: 2020-6-4 16:58
      */
-    @RequestMapping(value = "/getListPage")
+    @RequestMapping(value = "/getListPage", name = "user_getListPage")
     HashMap<String, Object> getListPage(HttpServletRequest request) {
         SysUserVO sysUserVO = new SysUserVO();
         sysUserVO.setUsername(request.getParameter("username"));
@@ -69,7 +69,7 @@ public class SysUserController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/saveOrUpdate")
+    @RequestMapping(value = "/saveOrUpdate", name = "user_saveOrUpdate")
     public BaseResponse saveOrUpdate(@RequestBody SysUserVO sysUserVO,HttpServletRequest request) throws CommonServiceException {
         //校验入参
         sysUserVO.checkParam();
@@ -93,7 +93,7 @@ public class SysUserController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/delete/{id}")
+    @RequestMapping(value = "/delete/{id}", name = "user_delete")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysUserService.delete(id);
         if (bool) {

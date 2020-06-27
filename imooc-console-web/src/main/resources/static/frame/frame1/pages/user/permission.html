@@ -65,15 +65,15 @@
         <div field="id" width="50" headerAlign="center" align="center" allowSort="true">ID</div>
         <div field="pid" width="50" headerAlign="center" align="center" allowSort="true">父ID</div>
         <div field="type" width="100" headerAlign="center" align="center" allowSort="true" renderer="getDictName">权限类型</div>
-        <div field="name" width="100" headerAlign="center" align="center" allowSort="true">权限名称</div>
-        <div field="uri" width="100" headerAlign="center" align="center" allowSort="true">资源URI</div>
-        <div field="seq" width="50" headerAlign="center" align="center" allowSort="true">序号</div>
+        <div field="name" width="180" headerAlign="center" align="center" allowSort="true">权限名称</div>
+        <div field="uri" width="150" headerAlign="center" align="center" allowSort="true">资源URI</div>
+        <div field="seq" width="40" headerAlign="center" align="center" allowSort="true">序号</div>
         <div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
-        <div field="createTime" width="150" headerAlign="center" dataType="date" dateFormat="yyyy-MM-dd" align="center"
+        <div field="createTime" width="100" headerAlign="center" dataType="date" dateFormat="yyyy-MM-dd" align="center"
              allowSort="true">创建时间
         </div>
         <div field="updateUser" width="80" headerAlign="center" align="center" allowSort="true">更新人</div>
-        <div field="updateTime" width="150" headerAlign="center" align="center" allowSort="true">更新时间</div>
+        <div field="updateTime" width="100" headerAlign="center" align="center" allowSort="true">更新时间</div>
         <div name="action" width="100" headerAlign="center">操作</div>
     </div>
 </div>
@@ -190,7 +190,7 @@
                     ids.push(r.id);
                 }
                 var id = ids.join(',');
-                grid.loading("操作中，请稍后......");
+                //grid.loading("操作中，请稍后......");
                 $.ajax({
                     url: permission_delete + "/" + id,
                     success: function (text) {

@@ -87,6 +87,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new CommonServiceException(404, "用户名输入有误");
         }
 
+        if(sysUser.getStatus()==0){
+            throw new CommonServiceException(404, "该用户已锁定!");
+        }
+
         if(!password.equals(sysUser.getPassword())){
             throw new CommonServiceException(500,"用户密码输入有误");
         }else{
@@ -102,7 +106,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return apis;
         }
         for(SysPermission sysPermission:list){
-            apis=sysPermission.getCode()+",";
+            apis+=sysPermission.getCode()+",";
         }
         return apis;
     }
