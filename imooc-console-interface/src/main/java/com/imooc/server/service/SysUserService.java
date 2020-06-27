@@ -73,4 +73,7 @@ public interface SysUserService {
 
     //验证用户名和密码是否正确
     SysUser checkUserLogin(String username, String password) throws CommonServiceException;
+
+    //通过userId获取权限字符串列表
+    String getPermissionByUserId(Integer id);
 }

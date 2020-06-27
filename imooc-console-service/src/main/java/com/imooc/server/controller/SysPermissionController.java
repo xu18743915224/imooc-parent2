@@ -93,7 +93,7 @@ public class SysPermissionController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/delete/{id}")
+    @RequestMapping(value = "/delete/{id}", name = "API-PERMISSION-DELETE")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysPermissionService.delete(id);
         if (bool) {

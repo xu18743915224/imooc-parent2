@@ -36,6 +36,9 @@ public class SysUserController {
         map.put("id", sysUser.getId());
         map.put("username", sysUser.getUsername());
         map.put("nickname", sysUser.getNickname());
+        //获取角色apis
+        String apis=sysUserService.getPermissionByUserId(sysUser.getId());
+        map.put("apis",apis);
         String token = jwtTokenUtil.createJwt(sysUser.getId()+"",sysUser.getUsername(),map);
         return BaseResponse.success(token);
     }

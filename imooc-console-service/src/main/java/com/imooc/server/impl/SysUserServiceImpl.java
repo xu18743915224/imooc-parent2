@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.mapper.SysUserMapper;
+import com.imooc.server.model.bo.SysPermission;
 import com.imooc.server.model.bo.SysUser;
 import com.imooc.server.model.vo.SysUserVO;
+import com.imooc.server.service.SysPermissionService;
 import com.imooc.server.service.SysUserService;
 import com.imooc.server.util.ColumnFieldUtil;
 import com.imooc.server.util.MD5Util;
@@ -15,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +35,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     SysUserMapper sysUserMapper;
+    @Autowired
+    SysPermissionService sysPermissionService;
 
     @Override
     public boolean saveOrUpdate(SysUser sysUser,String loginUsername) {
@@ -86,6 +92,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }else{
             return sysUser;
         }
+    }
+
+    @Override
+    public String getPermissionByUserId(Integer id) {
+        String apis="";
+        List<SysPermission> list = sysPermissionService.findByUserId(id);
+        if(CollectionUtils.isEmpty(list)){
+            return apis;
+        }
+        for(SysPermission sysPermission:list){
+            apis=sysPermission.getCode()+",";
+        }
+        return apis;
     }
 
 
