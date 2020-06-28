@@ -71,3 +71,7 @@ var dictData_list = basePath + "/console/dict/getListPageData";
 var dictData_delete = basePath + "/console/dict/deleteData";
 //新增or更新
 var dictData_saveOrUpdate = basePath + "/console/dict/saveOrUpdateData";
+
+//-----------------------------------------------------------------------------------------------菜单管理
+//分页查询
+var menu_list = basePath + "/console/menu/getListPage";
