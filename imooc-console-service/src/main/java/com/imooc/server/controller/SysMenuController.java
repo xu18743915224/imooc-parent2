@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -45,6 +46,17 @@ public class SysMenuController {
         sysMenuVO.setSortOrder(request.getParameter("sortOrder"));
         HashMap<String, Object> listPage = sysMenuService.getListPage(sysMenuVO);
         return listPage;
+    }
+
+    /**
+     * @Description: 根据ID查询子列表
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/getListById/{id}")
+    List<SysMenuVO> getListById(@PathVariable("id") Integer id){
+        List<SysMenuVO> list=sysMenuService.getListById(id);
+        return list;
     }
 
     /**
@@ -87,4 +99,13 @@ public class SysMenuController {
         return BaseResponse.serviceException(new CommonServiceException(500, "删除失败！!"));
     }
 
+    /**
+     * @Description: 根据Id查询对象
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/queryById/{id}")
+    SysMenu queryById(@PathVariable("id") Integer id) {
+        return sysMenuService.queryById(id);
+    }
 }

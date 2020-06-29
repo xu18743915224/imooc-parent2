@@ -10,11 +10,13 @@ import com.imooc.server.model.vo.SysMenuVO;
 import com.imooc.server.service.SysMenuService;
 import com.imooc.server.util.ColumnFieldUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,15 +30,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public HashMap<String, Object> getListPage(SysMenuVO sysMenuVO) {
-        IPage<SysMenu> ipage = new Page<SysMenu>(sysMenuVO.getPageIndex(), sysMenuVO.getPageSize());
+        IPage<SysMenu> ipage = new Page<>(sysMenuVO.getPageIndex(), sysMenuVO.getPageSize());
         //组装查询数据
-        QueryWrapper<SysMenu> wrapper = new QueryWrapper<SysMenu>();
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(sysMenuVO.getText())) {
             wrapper.like("text", sysMenuVO.getText());
         }
         if (sysMenuVO.getStatus()!=null) {
             wrapper.eq("status", sysMenuVO.getStatus());
         }
+        wrapper.eq("parent_id", 0);
         if (StringUtils.isNotBlank(sysMenuVO.getSortField()) && StringUtils.isNotBlank(sysMenuVO.getSortOrder())) {
             String column = ColumnFieldUtil.propertyToField(sysMenuVO.getSortField());
             if ("asc".equals(sysMenuVO.getSortOrder())) {
@@ -74,4 +77,59 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     public boolean delete(Integer id) {
         return this.deleteById(id);
     }
+
+    @Override
+    public SysMenu queryById(Integer id) {
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper();
+        wrapper.eq("id", id);
+        return this.selectOne(wrapper);
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单start
+    @Override
+    public List<SysMenuVO> getListById(Integer id) {
+        //组装查询数据
+        QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
+        List<SysMenu> menuList = sysMenuMapper.selectList(wrapper);
+        List<SysMenuVO> menus = getMenuListById(id, menuList);
+        menus = loopSysMenu(menus,menuList);
+        return menus;
+    }
+
+    /**
+     * @param id 菜单的id
+     * @param menuList 数据库查询到的所有菜单列表，未整理的
+     *         List<SysMenuVO> menus = getMenuListById("0", menuList); 从根节点查询
+     *         menus = loopSysMenu(menus,menuList);
+     */
+    private List<SysMenuVO> getMenuListById(Integer id,List<SysMenu> menuList){
+        List<SysMenuVO> children = new ArrayList<>();
+        for (SysMenu sysMenu : menuList) {
+            if(id==sysMenu.getId()) {
+                SysMenuVO sysMenuVO= new SysMenuVO();
+                BeanUtils.copyProperties(sysMenu, sysMenuVO);
+                // temp 用于封装各种属性
+                children.add(sysMenuVO);
+            }
+        }
+        return children;
+    }
+    /**
+     * @param menus  某一级菜单的列表
+     * @param menuList 数据库查询到的所有菜单列表，未整理的
+     */
+    private List<SysMenuVO> loopSysMenu(List<SysMenuVO> menus, List<SysMenu> menuList) {
+
+        for (SysMenuVO menu : menus) {
+            // 循环获取某个菜单的子菜单并set到属性里边
+            menu.setChildren(this.getMenuListById(menu.getId(),menuList));
+            // 如果某次返回的子菜单是空的，说明下边不在有子菜单了 所以跳出本次循环
+            if(menu.getChildren().isEmpty()) {
+                continue;
+            }
+            loopSysMenu(menu.getChildren(),menuList);
+        }
+        return menus;
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单end
+
 }

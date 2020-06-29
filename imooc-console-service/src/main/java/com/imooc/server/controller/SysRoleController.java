@@ -29,7 +29,7 @@ import java.util.List;
 public class SysRoleController {
 
     @Autowired
-    SysRoleService sysRoleServicei;
+    SysRoleService sysRoleService;
 
     /**
      * @Description: 分页查询
@@ -46,7 +46,7 @@ public class SysRoleController {
         sysRoleVO.setPageSize(Integer.parseInt(request.getParameter("pageSize")));
         sysRoleVO.setSortField(request.getParameter("sortField"));
         sysRoleVO.setSortOrder(request.getParameter("sortOrder"));
-        HashMap<String, Object> listPage = sysRoleServicei.getListPage(sysRoleVO);
+        HashMap<String, Object> listPage = sysRoleService.getListPage(sysRoleVO);
         return listPage;
     }
 
@@ -61,7 +61,7 @@ public class SysRoleController {
      */
     @RequestMapping(value = "/queryById/{id}")
     SysRole queryById(@PathVariable("id") Integer id) {
-        return sysRoleServicei.queryById(id);
+        return sysRoleService.queryById(id);
     }
 
     /**
@@ -81,7 +81,7 @@ public class SysRoleController {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(sysRoleVO, sysRole);
 
-        boolean bool = sysRoleServicei.saveOrUpdate(sysRole,loginUsername);
+        boolean bool = sysRoleService.saveOrUpdate(sysRole,loginUsername);
         if (bool) {
             return BaseResponse.success();
         }
@@ -96,7 +96,7 @@ public class SysRoleController {
      */
     @RequestMapping(value = "/delete/{id}", name = "role_delete")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
-        boolean bool = sysRoleServicei.delete(id);
+        boolean bool = sysRoleService.delete(id);
         if (bool) {
             return BaseResponse.success();
         }
@@ -114,7 +114,7 @@ public class SysRoleController {
         // 校验入参
         sysUserRoleVO.checkParam2();
 
-        boolean bool = sysRoleServicei.roleToUser(sysUserRoleVO);
+        boolean bool = sysRoleService.roleToUser(sysUserRoleVO);
         if (bool) {
             return BaseResponse.success();
         }
@@ -132,7 +132,7 @@ public class SysRoleController {
         if (id==null) {
             throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
         }
-        List<SysUserRoleDTO> list = sysRoleServicei.queryUserRoleByRoleId(id);
+        List<SysUserRoleDTO> list = sysRoleService.queryUserRoleByRoleId(id);
         return BaseResponse.success(list);
     }
 
@@ -147,7 +147,7 @@ public class SysRoleController {
         if (id==null) {
             throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
         }
-        List<SysUserRoleDTO> list = sysRoleServicei.queryNoAuthUserByRoleId(id);
+        List<SysUserRoleDTO> list = sysRoleService.queryNoAuthUserByRoleId(id);
         return BaseResponse.success(list);
     }
 

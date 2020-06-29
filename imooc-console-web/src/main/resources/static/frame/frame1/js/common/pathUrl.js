@@ -75,3 +75,11 @@ var dictData_saveOrUpdate = basePath + "/console/dict/saveOrUpdateData";
 //-----------------------------------------------------------------------------------------------菜单管理
 //分页查询
 var menu_list = basePath + "/console/menu/getListPage";
+//新增
+var menu_save = basePath + "/console/menu/saveOrUpdate";
+//根据ID查询
+var menu_queryById = basePath + "/console/menu/queryById/";
+//删除
+var menu_delete = basePath + "/console/menu/delete/";
+//根据ID查询
+var menu_getListById = basePath + "/console/menu/getListById/";

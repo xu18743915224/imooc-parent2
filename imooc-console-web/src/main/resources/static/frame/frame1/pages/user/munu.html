@@ -53,7 +53,7 @@
         <!--<div type="indexcolumn"></div>        -->
         <div type="checkcolumn"></div>
         <div field="id" width="50" headerAlign="center" align="center" allowSort="true">ID</div>
-        <div field="parentId" width="100" headerAlign="center" align="center" allowSort="true">父ID</div>
+        <!--<div field="parentId" width="100" headerAlign="center" align="center" allowSort="true">父ID</div>-->
         <div field="text" width="100" headerAlign="center" align="center" allowSort="true">菜单名称</div>
         <div field="iconCls" width="100" headerAlign="center" align="center" allowSort="true">菜单图标</div>
         <div field="url" width="100" headerAlign="center" align="center" allowSort="true">菜单url</div>
@@ -126,7 +126,7 @@
             title: "新增", width: 600, height: 400,
             onload: function () {
                 var iframe = this.getIFrameEl();
-                var data = {action: "new"};
+                var data = {action: "add"};
                 iframe.contentWindow.SetData(data);
             },
             ondestroy: function (action) {
@@ -172,7 +172,7 @@
                 var id = ids.join(',');
                 grid.loading("操作中，请稍后......");
                 $.ajax({
-                    url: user_delete + "/" + id,
+                    url: menu_delete+ id,
                     success: function (text) {
                         if (text.code == 200) {
                             alert("删除成功!");

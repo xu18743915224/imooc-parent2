@@ -19,56 +19,76 @@
     </style>
 </head>
 <body>
+<div style="width:100%;">
+    <div class="mini-toolbar" style="border-bottom:0;padding:0px;">
+        <table style="width:100%;height:100%;">
+            <tr>
+                <td style="width:100%;">
+                    <a class="mini-button" iconCls="icon-add" onclick="add()">新增</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 <input name="id" id="menuId" class="mini-hidden"/>
-<div id="treegrid1" class="mini-treegrid" style="width:100%;height:450px;"
-     url="../../data/tasks.txt" showTreeIcon="true"
+<input name="parentId" id="parentId" class="mini-hidden"/>
+<!--url="../../data/tasks.txt"-->
+<div id="treegrid1" class="mini-treegrid" style="width:100%;height:450px;" showTreeIcon="true" ondrawcell="onDrawCell"
      treeColumn="taskname" idField="id" parentField="parentId" resultAsTree="false"
      allowResize="true" expandOnLoad="true"
 >
     <div property="columns">
         <div type="indexcolumn"></div>
-        <div name="taskname" field="id" width="160" >任务名称</div>
-        <div field="text" width="80">菜单名称</div>
-        <div field="status" width="80">菜单状态</div>
+        <!--<div field="id" width="80">ID</div>-->
+        <div name="taskname" field="text" width="160" >菜单名称</div>
         <div field="url" width="80">菜单url</div>
+        <div field="iconCls" width="80">菜单图标</div>
+        <div field="status" width="80">菜单状态</div>
         <div field="no" width="80">顺序</div>
+        <div name="action" width="100" headerAlign="center">操作</div>
     </div>
 </div>
-</br>
-<div style="text-align:center;padding:10px;">
-    <a class="mini-button" onclick="saveData()" style="width:60px;margin-right:20px;">保存</a>
-</div>
-</br>
 <script type="text/javascript">
+    mini.parse();
+    var tree = mini.get("treegrid1");
+
+    //初始化数据
+    $(function () {
+        init();
+    });
+
+
+    function init() {
+        //获取下拉选字典AND列表字典
+        /*dictDataAction.getDictData("form1",dictData_queryDictDataByType);
+        dictDataAction.getAA10INfoDict("type","TYPE",dictData_queryDictDataByType);*/
+    }
+
+    //加载loadTreeGrid
+    function loadTreeGrid(id) {
+        tree.setUrl(menu_getListById+id);
+        tree.load();
+    }
+
+    function onDrawCell(e){
+        var node = e.node,
+            column = e.column,
+            field = e.field,
+            value = e.value;
+        if (column.name == "action") {
+            e.cellStyle = "text-align:center";
+            e.cellHtml = '<a href="javascript:addSonMenu(\'' + node.id + '\')">添加子菜单</a>&nbsp;' +
+                '<a href="javascript:editSonMenu(\'' + node.id + '\')">编辑</a> ';
+        }
+    };
 
     function SetData(data) {
         if (data.action == "addChildrenMenu") {
             //跨页面传递的数据对象，克隆后才可以安全使用
             data = mini.clone(data);
-            mini.get("menuId").setValue(data.id);
-
+            mini.get("parentId").setValue(data.id);
+            loadTreeGrid(data.id);
         }
-    }
-
-    function saveData() {
-        /*$.ajax({
-            url: role_roleToUser,
-            type: 'post',
-            data: JSON.stringify(userRole),
-            contentType: "application/json;charset=utf-8",
-            success: function (text) {
-                if (text.code == 200) {
-                    alert("保存成功!");
-                    CloseWindow("save");
-                } else {
-                    alert(text.message);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert(jqXHR.responseText);
-                CloseWindow();
-            }
-        });*/
     }
 
     function CloseWindow(action) {
@@ -76,6 +96,56 @@
         else window.close();
     }
 
+    function add() {
+        mini.open({
+            targetWindow: window,
+            url: basePath + "/static/frame/frame1/pages/user/menu_add_edit.html",
+            title: "新增", width: 600, height: 400,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+                var data = {action: "add", id:mini.get("parentId").getValue() };
+                iframe.contentWindow.SetData(data);
+            },
+            ondestroy: function (action) {
+
+                tree.reload();
+            }
+        });
+    }
+
+    function addSonMenu(id) {
+        mini.open({
+            url: basePath + "/static/frame/frame1/pages/user/menu_add_edit.html",
+            title: "新增菜单", width: 600, height: 400,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+                var data = {action: "add", id: id};
+                iframe.contentWindow.SetData(data);
+
+            },
+            ondestroy: function (action) {
+                //var iframe = this.getIFrameEl();
+                tree.reload();
+            }
+        });
+    }
+
+    function editSonMenu(id) {
+        mini.open({
+            url: basePath + "/static/frame/frame1/pages/user/menu_add_edit.html",
+            title: "编辑菜单", width: 600, height: 400,
+            onload: function () {
+                var iframe = this.getIFrameEl();
+                var data = {action: "edit", id: id};
+                iframe.contentWindow.SetData(data);
+
+            },
+            ondestroy: function (action) {
+                //var iframe = this.getIFrameEl();
+                tree.reload();
+            }
+        });
+    }
 
 
 </script>

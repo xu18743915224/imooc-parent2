@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Description: 菜单表
@@ -28,6 +29,7 @@ public class SysMenuVO extends BaseRequest implements Serializable {
     private Date createTime;    //
     private String updateUser;  //
     private Date updateTime;    //
+    private List<SysMenuVO> children;
 
     //分页信息
     private int pageSize = 20;
