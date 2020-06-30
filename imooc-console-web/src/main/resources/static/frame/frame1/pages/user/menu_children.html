@@ -77,7 +77,8 @@
         if (column.name == "action") {
             e.cellStyle = "text-align:center";
             e.cellHtml = '<a href="javascript:addSonMenu(\'' + node.id + '\')">添加子菜单</a>&nbsp;' +
-                '<a href="javascript:editSonMenu(\'' + node.id + '\')">编辑</a> ';
+                '<a href="javascript:editSonMenu(\'' + node.id + '\')">编辑</a> '+
+                '<a href="javascript:remove(\'' + node.id + '\')">删除</a> ';
         }
     };
 
@@ -146,6 +147,23 @@
         });
     }
 
+    function remove(id) {
+        if (confirm("删除该菜单同时会删除该菜单下所有子菜单，确定删除选中记录？")) {
+            $.ajax({
+                url: menu_delete+id,
+                success: function (text) {
+                    if (text.code == 200) {
+                        alert("删除成功!");
+                        tree.reload();
+                    } else {
+                        alert(text.message);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+    }
 
 </script>
 </body>

@@ -126,7 +126,7 @@
             title: "新增", width: 600, height: 400,
             onload: function () {
                 var iframe = this.getIFrameEl();
-                var data = {action: "add"};
+                var data = {action: "add",id:"0"};
                 iframe.contentWindow.SetData(data);
             },
             ondestroy: function (action) {

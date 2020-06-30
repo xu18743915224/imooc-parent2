@@ -75,7 +75,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Override
     public boolean delete(Integer id) {
-        return this.deleteById(id);
+
+        //根据id查询所有子菜单循环删除
+        List<SysMenuVO> list=getGridListById(id);
+        for(SysMenuVO menu:list){
+            this.deleteById(menu.getId());
+        }
+        //根据ID删除当前ID菜单
+        boolean b=this.deleteById(id);
+        return b;
     }
 
     @Override
