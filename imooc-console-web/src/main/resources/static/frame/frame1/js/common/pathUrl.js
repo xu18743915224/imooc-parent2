@@ -82,4 +82,4 @@ var menu_queryById = basePath + "/console/menu/queryById/";
 //删除
 var menu_delete = basePath + "/console/menu/delete/";
 //根据ID查询
-var menu_getListById = basePath + "/console/menu/getListById/";
+var menu_getListById = basePath + "/console/menu/getGridListById/";

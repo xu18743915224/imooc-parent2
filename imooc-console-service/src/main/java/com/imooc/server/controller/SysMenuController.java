@@ -53,9 +53,9 @@ public class SysMenuController {
      * @Author: xwl
      * @Date: 2020-5-29 15:05
      */
-    @RequestMapping(value = "/getListById/{id}")
+    @RequestMapping(value = "/getGridListById/{id}")
     List<SysMenuVO> getListById(@PathVariable("id") Integer id){
-        List<SysMenuVO> list=sysMenuService.getListById(id);
+        List<SysMenuVO> list=sysMenuService.getGridListById(id);
         return list;
     }
 

@@ -84,6 +84,29 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         wrapper.eq("id", id);
         return this.selectOne(wrapper);
     }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单表格start
+    @Override
+    public List<SysMenuVO> getGridListById(Integer id) {
+        List<SysMenuVO> result = new ArrayList<>();
+        List<SysMenuVO> list=getListById(id);
+        if(list!=null&&list.size()>0){
+            result=loopMenu(result,list);
+        }
+
+        return result;
+    }
+    private List<SysMenuVO> loopMenu(List<SysMenuVO> result, List<SysMenuVO> list) {
+
+        for(SysMenuVO menu:list){
+            result.add(menu);
+            if(menu.getChildren().isEmpty()) {
+                continue;
+            }
+            loopMenu(result,menu.getChildren());
+        }
+        return result;
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单表格end
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单start
     @Override
     public List<SysMenuVO> getListById(Integer id) {
@@ -104,7 +127,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private List<SysMenuVO> getMenuListById(Integer id,List<SysMenu> menuList){
         List<SysMenuVO> children = new ArrayList<>();
         for (SysMenu sysMenu : menuList) {
-            if(id==sysMenu.getId()) {
+            if(id==sysMenu.getParentId()) {
                 SysMenuVO sysMenuVO= new SysMenuVO();
                 BeanUtils.copyProperties(sysMenu, sysMenuVO);
                 // temp 用于封装各种属性

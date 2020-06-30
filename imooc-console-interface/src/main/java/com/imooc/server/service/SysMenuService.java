@@ -20,6 +20,9 @@ public interface SysMenuService {
     //根据Id查询对象
     SysMenu queryById(Integer id);
 
-    //根据ID查询子列表
+    //根据ID查询菜单
     List<SysMenuVO> getListById(Integer id);
+
+    //根据ID查询子列表
+    List<SysMenuVO> getGridListById(Integer id);
 }
