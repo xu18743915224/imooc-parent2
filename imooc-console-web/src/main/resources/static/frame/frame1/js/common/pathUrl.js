@@ -81,5 +81,7 @@ var menu_save = basePath + "/console/menu/saveOrUpdate";
 var menu_queryById = basePath + "/console/menu/queryById/";
 //删除
 var menu_delete = basePath + "/console/menu/delete/";
-//根据ID查询
+//根据ID查询树表格
 var menu_getListById = basePath + "/console/menu/getGridListById/";
+//根据ID查询树
+var menu_getTreeById = basePath + "/console/menu/getTreeById/";

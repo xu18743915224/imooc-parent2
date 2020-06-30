@@ -60,6 +60,17 @@ public class SysMenuController {
     }
 
     /**
+     * @Description: 根据ID查询子列表
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/getTreeById/{id}")
+    List<SysMenuVO> getTreeById(@PathVariable("id") Integer id){
+        List<SysMenuVO> list=sysMenuService.getTreeById(id);
+        return list;
+    }
+
+    /**
      * @Description: 新增
      * @param: SysUser
      * @return: boolean

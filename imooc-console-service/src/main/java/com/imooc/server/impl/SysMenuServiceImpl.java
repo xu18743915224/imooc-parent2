@@ -103,6 +103,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
         return result;
     }
+
     private List<SysMenuVO> loopMenu(List<SysMenuVO> result, List<SysMenuVO> list) {
 
         for(SysMenuVO menu:list){
@@ -117,6 +118,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单表格end
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单start
     @Override
+    public List<SysMenuVO> getTreeById(Integer id) {
+        return getListById(id);
+    }
+
     public List<SysMenuVO> getListById(Integer id) {
         //组装查询数据
         QueryWrapper<SysMenu> wrapper = new QueryWrapper<>();
