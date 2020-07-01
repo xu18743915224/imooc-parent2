@@ -30,6 +30,7 @@ public class SysMenuVO extends BaseRequest implements Serializable {
     private String updateUser;  //
     private Date updateTime;    //
     private List<SysMenuVO> children;
+    private boolean checked;
 
     //分页信息
     private int pageSize = 20;

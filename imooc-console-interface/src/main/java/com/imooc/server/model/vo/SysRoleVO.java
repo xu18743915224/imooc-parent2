@@ -28,6 +28,7 @@ public class SysRoleVO extends BaseRequest implements Serializable {
     private Date createTime;  //
     private String updateUser;  //
     private Date updateTime;  //
+    private String menus;
 
 
     //分页信息
@@ -43,6 +44,12 @@ public class SysRoleVO extends BaseRequest implements Serializable {
         }
         if (StringUtils.isEmpty(roleCode)) {
             throw new CommonServiceException(404, "角色编码不能为空!");
+        }
+    }
+
+    public void menuToRoleCheckParam() throws CommonServiceException {
+        if (id==null) {
+            throw new CommonServiceException(404, "角色ID不能为空!");
         }
     }
 

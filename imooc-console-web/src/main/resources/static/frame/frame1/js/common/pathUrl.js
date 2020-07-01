@@ -34,6 +34,8 @@ var role_queryUserRoleByRoleId= basePath + "/console/role/queryUserRoleByRoleId/
 var role_queryNoAuthUserByRoleId= basePath + "/console/role/queryNoAuthUserByRoleId/";
 //角色授权用户
 var role_roleToUser = basePath + "/console/role/roleToUser";
+//查询角色列表
+var role_queryRoleList= basePath + "/console/role/queryRoleList";
 
 //-----------------------------------------------权限管理_permission
 //分页查询
@@ -83,5 +85,9 @@ var menu_queryById = basePath + "/console/menu/queryById/";
 var menu_delete = basePath + "/console/menu/delete/";
 //根据ID查询树表格
 var menu_getListById = basePath + "/console/menu/getGridListById/";
-//根据ID查询树
-var menu_getTreeById = basePath + "/console/menu/getTreeById/";
+//菜单授权角色
+var menu_menuToRole = basePath + "/console/menu/menuToRole";
+//根据角色ID查询角色菜单表数据
+var menu_queryMenuToRoleByRoleId = basePath + "/console/menu/queryMenuToRoleByRoleId/";
+//根据用户ID查询用户所拥有的菜单列表
+var menu_getIndexMenuTreeByUserId = basePath + "/console/menu/getIndexMenuTreeByUserId";

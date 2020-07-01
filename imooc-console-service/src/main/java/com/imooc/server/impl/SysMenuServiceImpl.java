@@ -4,9 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.mapper.SysMenuMapper;
+import com.imooc.server.mapper.SysRoleMenuMapper;
 import com.imooc.server.model.bo.SysMenu;
+import com.imooc.server.model.bo.SysRoleMenu;
+import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.vo.SysMenuVO;
+import com.imooc.server.model.vo.SysRoleVO;
 import com.imooc.server.service.SysMenuService;
 import com.imooc.server.util.ColumnFieldUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -16,17 +21,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 @Transactional
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
     @Autowired
     SysMenuMapper sysMenuMapper;
-
+    @Autowired
+    SysRoleMenuMapper sysRoleMenuMapper;
 
     @Override
     public HashMap<String, Object> getListPage(SysMenuVO sysMenuVO) {
@@ -168,4 +172,70 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单end
 
+    @Override
+    public boolean menuToRole(SysRoleVO sysRoleVO) {
+        if(sysRoleVO.getId()==null){
+            new CommonServiceException(500, "保存失败！角色ID不能为空!");
+        }
+        //删除原所有角色菜单
+        QueryWrapper<SysRoleMenu> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",sysRoleVO.getId());
+        List<SysRoleMenu> sysRoleMenus = sysRoleMenuMapper.selectList(wrapper);
+        if(sysRoleMenus!=null&&sysRoleMenus.size()>0 ){
+            for(SysRoleMenu sysRoleMenu:sysRoleMenus){
+                sysRoleMenuMapper.deleteById(sysRoleMenu.getId());
+            }
+        }
+
+        //新增角色菜单
+        if(StringUtils.isNotEmpty(sysRoleVO.getMenus())){
+            List<String> menus = Arrays.asList(sysRoleVO.getMenus().split(","));
+            for(String menuId:menus){
+                SysRoleMenu sysRoleMenu=new SysRoleMenu();
+                sysRoleMenu.setRoleId(sysRoleVO.getId());
+                sysRoleMenu.setMenuId(Integer.valueOf(menuId));
+                sysRoleMenuMapper.insert(sysRoleMenu);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public List<SysMenuVO> queryMenuToRoleByRoleId(Integer id) {
+        List<SysMenuVO> menuVOs=new ArrayList<>();
+        QueryWrapper<SysMenu> wrapper1 = new QueryWrapper<>();
+        List<SysMenu> menuList = sysMenuMapper.selectList(wrapper1);
+
+        QueryWrapper<SysRoleMenu> wrapper2 = new QueryWrapper<>();
+        wrapper2.eq("role_id",id);
+        List<SysRoleMenu> roleMenuList = sysRoleMenuMapper.selectList(wrapper2);
+        if(menuList!=null&&menuList.size()>0){
+            for(SysMenu menu:menuList){
+                //赋值
+                SysMenuVO menuVO=new SysMenuVO();
+                BeanUtils.copyProperties(menu,menuVO);
+                if(roleMenuList!=null&&roleMenuList.size()>0){
+                    for(SysRoleMenu roleMenu:roleMenuList){
+                        if(menu.getId().equals(roleMenu.getMenuId())){
+                            menuVO.setChecked(true);
+                        }
+                    }
+                }
+                menuVOs.add(menuVO);
+            }
+        }
+        return menuVOs;
+    }
+
+    @Override
+    public List<SysMenuVO> getIndexMenuTreeByUserId(Integer userId) {
+        //根据用户获取拥有的菜单数据
+        SysUserDTO sysUserDTO=new SysUserDTO();
+        sysUserDTO.setId(userId);
+        List<SysMenu> sysMenus=sysMenuMapper.getMenuByUserId(sysUserDTO);
+        //组装查询数据返回
+        List<SysMenuVO> menus = getMenuListById(0, sysMenus);
+        menus = loopSysMenu(menus,sysMenus);
+        return menus;
+    }
 }

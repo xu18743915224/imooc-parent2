@@ -5,6 +5,7 @@ import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.model.bo.SysMenu;
 import com.imooc.server.model.bo.SysUser;
 import com.imooc.server.model.vo.SysMenuVO;
+import com.imooc.server.model.vo.SysRoleVO;
 import com.imooc.server.model.vo.SysUserVO;
 import com.imooc.server.service.SysMenuService;
 import com.imooc.server.service.SysUserService;
@@ -119,4 +120,49 @@ public class SysMenuController {
     SysMenu queryById(@PathVariable("id") Integer id) {
         return sysMenuService.queryById(id);
     }
+
+    /**
+     * @Description: 菜单角色授权
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/menuToRole")
+    public BaseResponse menuToRole(@RequestBody SysRoleVO sysRoleVO) throws CommonServiceException {
+        //校验入参
+        sysRoleVO.menuToRoleCheckParam();
+
+        boolean bool = sysMenuService.menuToRole(sysRoleVO);
+        if (bool) {
+            return BaseResponse.success();
+        }
+        return BaseResponse.serviceException(new CommonServiceException(500, "保存失败！!"));
+    }
+
+    /**
+     * @Description: 根据角色ID查询角色菜单表数据
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/queryMenuToRoleByRoleId/{id}")
+    List<SysMenuVO> queryMenuToRoleByRoleId(@PathVariable("id") Integer id){
+        List<SysMenuVO> list=sysMenuService.queryMenuToRoleByRoleId(id);
+        return list;
+    }
+
+    /**
+     * @Description: 根据用户ID查询用户所拥有的菜单列表
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/getIndexMenuTreeByUserId")
+    List<SysMenuVO> getIndexMenuTreeByUserId(HttpServletRequest request){
+        //获取Claims
+        Claims claims = (Claims)request.getAttribute("user_claims");
+        Integer userId = (Integer) claims.get("id");
+        List<SysMenuVO> list=sysMenuService.getIndexMenuTreeByUserId(userId);
+        return list;
+    }
+
+
+
 }

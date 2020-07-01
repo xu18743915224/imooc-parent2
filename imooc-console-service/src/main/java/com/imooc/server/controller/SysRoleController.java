@@ -4,6 +4,7 @@ import com.imooc.server.common.BaseResponse;
 import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.model.bo.SysRole;
 import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysRoleDTO;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
@@ -148,6 +149,17 @@ public class SysRoleController {
             throw new CommonServiceException(404, "出现异常,角色ID不能为空!");
         }
         List<SysUserRoleDTO> list = sysRoleService.queryNoAuthUserByRoleId(id);
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * @Description: 加载角色列表
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/queryRoleList")
+    public BaseResponse queryRoleList() {
+        List<SysRoleDTO> list = sysRoleService.queryRoleList();
         return BaseResponse.success(list);
     }
 

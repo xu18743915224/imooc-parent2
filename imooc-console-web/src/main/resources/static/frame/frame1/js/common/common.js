@@ -3,6 +3,7 @@
 //"top.location.href"是最外层的页面跳转
 $(function () {
     noTokenToLogin();
+    setInterval(noTokenToLogin(),30000)
 });
 function noTokenToLogin() {
     $.ajax({

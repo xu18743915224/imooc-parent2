@@ -8,6 +8,7 @@ import com.imooc.server.mapper.SysRoleMapper;
 import com.imooc.server.mapper.SysUserRoleMapper;
 import com.imooc.server.model.bo.SysRole;
 import com.imooc.server.model.bo.SysUserRole;
+import com.imooc.server.model.dto.SysRoleDTO;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
@@ -16,10 +17,13 @@ import com.imooc.server.model.vo.SysUserVO;
 import com.imooc.server.service.SysRoleService;
 import com.imooc.server.util.ColumnFieldUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -134,5 +138,20 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
             }
         }
         return true;
+    }
+
+    @Override
+    public List<SysRoleDTO> queryRoleList() {
+        List<SysRoleDTO> resultList=new ArrayList<>();
+        QueryWrapper<SysRole> wrapper = new QueryWrapper();
+        List<SysRole> list = sysRoleMapper.selectList(wrapper);
+        if(list!=null&&list.size()>0){
+            for(SysRole role:list){
+                SysRoleDTO roleDTO=new SysRoleDTO();
+                BeanUtils.copyProperties(role,roleDTO);
+                resultList.add(roleDTO);
+            }
+        }
+        return resultList;
     }
 }

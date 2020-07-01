@@ -1,6 +1,7 @@
 package com.imooc.server.service;
 
 import com.imooc.server.model.bo.SysRole;
+import com.imooc.server.model.dto.SysRoleDTO;
 import com.imooc.server.model.dto.SysUserDTO;
 import com.imooc.server.model.dto.SysUserRoleDTO;
 import com.imooc.server.model.vo.SysRoleVO;
@@ -54,4 +55,7 @@ public interface SysRoleService {
 
     //角色授权用户
     boolean roleToUser(SysUserRoleVO sysUserRoleVO);
+
+    //加载角色列表
+    List<SysRoleDTO> queryRoleList();
 }
