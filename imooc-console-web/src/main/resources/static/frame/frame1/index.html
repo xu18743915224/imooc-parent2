@@ -90,9 +90,10 @@
         //menu
         var menu = new Menu("#mainMenu", {
             itemclick: function (item) {
-                //if (!item.children) {
+                debugger
+                if (!item.children) {
                     activeTab(item);
-                //}
+                }
             }
         });
 
@@ -126,18 +127,34 @@
             $(".dropdown").removeClass("open");
         });
     });
-    
+
 
     function getMenuData(menu){
         $.ajax({
             url: menu_getIndexMenuTreeByUserId,
             //async: false,
             success: function (text) {
-                debugger
+                if(text){
+                    //递归删除为子菜单的children属性
+                    text=dgRemoveSonChildren(text);
+                }
                 var data = mini.decode(text);
+
                 menu.loadData(data);
             }
         })
+    }
+
+    function dgRemoveSonChildren(text){
+        for(var i=0;i<text.length;i++){
+            if(text[i].children.length==0){
+                text[i].children=undefined;
+                text[i].id=text[i].id.toString();  //这个id一定要为字符串tab栏对象会将该字符串转换为大写，不转报错并且tab栏无法删除报错
+            }else{
+                dgRemoveSonChildren(text[i].children);
+            }
+        }
+        return text;
     }
 
     function logout() {

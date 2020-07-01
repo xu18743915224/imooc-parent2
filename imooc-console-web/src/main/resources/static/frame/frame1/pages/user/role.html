@@ -18,7 +18,7 @@
             <tr>
                 <td style="width:100%;">
                     <a class="mini-button" iconCls="icon-add" onclick="add()">增加</a>
-                    <a class="mini-button" iconCls="icon-add" onclick="edit()">编辑</a>
+                    <a class="mini-button" iconCls="icon-edit" onclick="edit()">编辑</a>
                     <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
                 </td>
                 <td style="white-space:nowrap;">
@@ -79,6 +79,11 @@
         if (column.name == "action") {
             e.cellStyle = "text-align:center";
             e.cellHtml = '<a href="javascript:auth(\'' + record.id + '\')">授权用户</a>&nbsp; ';
+        }
+        //格式化日期
+        if (field == "createTime"||field == "updateTime") {
+            var value= new Date(parseInt(value));
+            e.cellHtml =mini.formatDate(value, "yyyy年MM月dd日");
         }
 
     });

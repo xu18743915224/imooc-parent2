@@ -22,6 +22,10 @@
 
 <form id="form1" method="post">
     <input name="id" class="mini-hidden"/>
+    <input name="createUser" class="mini-hidden"/>
+    <input name="createTime" class="mini-hidden"/>
+    <input name="updateUser" class="mini-hidden"/>
+    <input name="updateTime" class="mini-hidden"/>
     <div style="padding-left:11px;padding-bottom:5px;">
         <table style="table-layout:fixed;">
             <tr>
@@ -47,30 +51,12 @@
             <tr>
                 <td style="width:80px;">用户状态：</td>
                 <td style="width:150px;">
-                    <select name="status" class="mini-radiobuttonlist">
+                    <input class="mini-combobox" name="status" data-options={codeType:"STATUS"} onenter="onKeyEnter"
+                           textField="dictName" valueField="dictCode" emptyText="请选择..." allowInput="false" showNullItem="true" nullItemText="请选择..."/>
+                    <!--<select name="status" class="mini-radiobuttonlist">
                         <option value="0">锁定</option>
                         <option value="1">解锁</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td style="width:80px;">创建人：</td>
-                <td style="width:150px;">
-                    <input name="createUser" class="mini-textbox" enabled="false"/>
-                </td>
-                <td style="width:80px;">创建时间：</td>
-                <td style="width:150px;">
-                    <input name="createTime" class="mini-datepicker" enabled="false"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="width:80px;">更新人：</td>
-                <td style="width:150px;">
-                    <input name="updateUser" class="mini-textbox" enabled="false"/>
-                </td>
-                <td style="width:80px;">更新时间：</td>
-                <td style="width:150px;">
-                    <input name="updateTime" class="mini-textbox" enabled="false"/>
+                    </select>-->
                 </td>
             </tr>
         </table>
@@ -83,6 +69,17 @@
 <script type="text/javascript">
     mini.parse();
     var form = new mini.Form("form1");
+
+    //初始化数据
+    $(function () {
+        init();
+    });
+
+
+    function init() {
+        dictDataAction.getDictData("form1",dictData_queryDictDataByType);
+    }
+
 
     function SaveData() {
         var data = form.getData();

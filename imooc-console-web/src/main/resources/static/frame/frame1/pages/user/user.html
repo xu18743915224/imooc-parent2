@@ -43,7 +43,7 @@
             <tr>
                 <td style="width:100%;">
                     <a class="mini-button" iconCls="icon-add" onclick="add()">增加</a>
-                    <a class="mini-button" iconCls="icon-add" onclick="edit()">编辑</a>
+                    <a class="mini-button" iconCls="icon-edit" onclick="edit()">编辑</a>
                     <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
                 </td>
             </tr>
@@ -61,9 +61,9 @@
         <div field="password" width="100" headerAlign="center" align="center" allowSort="true">密码</div>
         <div field="nickname" width="100" headerAlign="center" align="center" allowSort="true">昵称</div>
         <div field="email" width="150" headerAlign="center" align="center" allowSort="true">邮箱</div>
-        <div field="status" width="50" headerAlign="center" align="center" allowSort="true">状态</div>
+        <div field="status" width="50" headerAlign="center" align="center" allowSort="true" renderer="getDictName">状态</div>
         <div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
-        <div field="createTime" width="150" headerAlign="center" dateFormat="yyyy-MM-dd" align="center"
+        <div field="createTime" width="150" headerAlign="center" dataType="date" dateFormat="yyyy-MM-dd" align="center"
              allowSort="true">创建时间
         </div>
         <div field="updateUser" width="80" headerAlign="center" align="center" allowSort="true">更新人</div>
@@ -80,9 +80,23 @@
         init();
     });
 
+    grid.on("drawcell", function (e) {
+        var record = e.record,
+            column = e.column,
+            field = e.field,
+            value = e.value;
+        //格式化日期
+        if (field == "createTime"||field == "updateTime") {
+            var value= new Date(parseInt(value));
+            e.cellHtml =mini.formatDate(value, "yyyy年MM月dd日");
+        }
+    });
 
     function init() {
         loadGrid();
+        //获取下拉选字典AND列表字典
+        dictDataAction.getDictData("form1",dictData_queryDictDataByType);
+        dictDataAction.getAA10INfoDict("status","STATUS",dictData_queryDictDataByType);
     }
 
     //加载grid
@@ -177,5 +191,10 @@
         } else {
             alert("请选中一条记录");
         }
+    }
+
+    //列表获取字典数据赋值
+    function getDictName(e){
+        return dictDataAction.getAA10INfoDictInfo(e.column.field,e.value);
     }
 </script>

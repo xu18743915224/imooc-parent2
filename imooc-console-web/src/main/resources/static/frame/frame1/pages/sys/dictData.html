@@ -96,6 +96,18 @@
         grid.load({"dictType": dictTypeVal});
     }
 
+    grid.on("drawcell", function (e) {
+        var record = e.record,
+            column = e.column,
+            field = e.field,
+            value = e.value;
+        //格式化日期
+        if (field == "createTime"||field == "updateTime") {
+            var value= new Date(parseInt(value));
+            e.cellHtml =mini.formatDate(value, "yyyy年MM月dd日");
+        }
+    });
+
     //查询grid
     function search() {
         var form = new mini.Form("form1");

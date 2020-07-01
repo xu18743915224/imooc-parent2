@@ -39,7 +39,7 @@
             <tr>
                 <td style="width:100%;">
                     <a class="mini-button" iconCls="icon-add" onclick="add()">新增</a>
-                    <a class="mini-button" iconCls="icon-add" onclick="edit()">编辑</a>
+                    <a class="mini-button" iconCls="icon-edit" onclick="edit()">编辑</a>
                     <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
                     <a class="mini-button" iconCls="icon-addnew" onclick="menuToRole()">菜单角色授权</a>
                 </td>
@@ -53,19 +53,19 @@
     <div property="columns">
         <!--<div type="indexcolumn"></div>        -->
         <div type="checkcolumn"></div>
-        <div field="id" width="50" headerAlign="center" align="center" allowSort="true">ID</div>
+        <div field="id" width="30" headerAlign="center" align="center" allowSort="true">ID</div>
         <!--<div field="parentId" width="100" headerAlign="center" align="center" allowSort="true">父ID</div>-->
         <div field="text" width="100" headerAlign="center" align="center" allowSort="true">菜单名称</div>
-        <div field="iconCls" width="100" headerAlign="center" align="center" allowSort="true">菜单图标</div>
-        <div field="url" width="100" headerAlign="center" align="center" allowSort="true">菜单url</div>
-        <div field="status" width="50" headerAlign="center" align="center" allowSort="true">状态</div>
-        <div field="no" width="50" headerAlign="center" align="center" allowSort="true">顺序</div>
-        <!--<div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
-        <div field="createTime" width="150" headerAlign="center" dateFormat="yyyy-MM-dd" align="center"
+        <div field="iconCls" width="80" headerAlign="center" align="center" allowSort="true">菜单图标</div>
+        <div field="url" width="180" headerAlign="center" align="center" allowSort="true">菜单url</div>
+        <div field="status" width="50" headerAlign="center" align="center" allowSort="true" renderer="getDictName">状态</div>
+        <div field="no" width="40" headerAlign="center" align="center" allowSort="true">顺序</div>
+        <div field="createUser" width="80" headerAlign="center" align="center" allowSort="true">创建人</div>
+        <div field="createTime" width="100" headerAlign="center" dateFormat="yyyy-MM-dd" align="center"
              allowSort="true">创建时间
         </div>
         <div field="updateUser" width="80" headerAlign="center" align="center" allowSort="true">更新人</div>
-        <div field="updateTime" width="150" headerAlign="center" align="center" allowSort="true">更新时间</div>-->
+        <div field="updateTime" width="100" headerAlign="center" align="center" allowSort="true">更新时间</div>
         <div name="action" width="100" headerAlign="center">操作</div>
     </div>
 </div>
@@ -82,6 +82,9 @@
 
     function init() {
         loadGrid();
+        //获取下拉选字典AND列表字典
+        dictDataAction.getDictData("form1",dictData_queryDictDataByType);
+        dictDataAction.getAA10INfoDict("status","STATUS",dictData_queryDictDataByType);
     }
 
     //加载grid
@@ -95,13 +98,23 @@
             column = e.column,
             field = e.field,
             value = e.value;
+        //格式化日期
+        if (field == "createTime"||field == "updateTime") {
+            var value= new Date(parseInt(value));
+            e.cellHtml =mini.formatDate(value, "yyyy年MM月dd日");
+        }
         //action列，超连接操作按钮
         if (column.name == "action") {
             e.cellStyle = "text-align:center";
-            e.cellHtml = '<a href="javascript:addChildrenMenu(\'' + record.id + '\')">添加菜单</a>&nbsp; ';
+            e.cellHtml = '<a href="javascript:addChildrenMenu(\'' + record.id + '\')">添加子菜单</a>&nbsp; ';
         }
 
     });
+
+    //列表获取字典数据赋值
+    function getDictName(e){
+        return dictDataAction.getAA10INfoDictInfo(e.column.field,e.value);
+    }
 
     //查询grid
     function search() {
