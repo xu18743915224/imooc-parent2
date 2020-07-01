@@ -103,7 +103,7 @@
 
     //加载tree
     function loadTree() {
-        tree.setUrl(menu_getListById+"0");
+        tree.setUrl(menu_getGridListById+"0");
         tree.load();
     }
     //--------------------------------
@@ -151,7 +151,7 @@
     //加载角色列表
     function getRoleList(){
         $.ajax({
-            url: role_queryRoleList,
+            url: menu_queryRoleList,
             cache: false,
             success: function (text) {
                 listbox1.addItems(text.data);

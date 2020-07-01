@@ -4,10 +4,12 @@ import com.imooc.server.common.BaseResponse;
 import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.model.bo.SysMenu;
 import com.imooc.server.model.bo.SysUser;
+import com.imooc.server.model.dto.SysRoleDTO;
 import com.imooc.server.model.vo.SysMenuVO;
 import com.imooc.server.model.vo.SysRoleVO;
 import com.imooc.server.model.vo.SysUserVO;
 import com.imooc.server.service.SysMenuService;
+import com.imooc.server.service.SysRoleService;
 import com.imooc.server.service.SysUserService;
 import com.imooc.server.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
@@ -28,7 +30,8 @@ public class SysMenuController {
 
     @Autowired
     SysMenuService sysMenuService;
-
+    @Autowired
+    SysRoleService sysRoleService;
 
     /**
      * @Description: 分页查询
@@ -37,7 +40,7 @@ public class SysMenuController {
      * @Author: xwl
      * @Date: 2020-6-4 16:58
      */
-    @RequestMapping(value = "/getListPage")
+    @RequestMapping(value = "/getListPage", name = "menu_getListPage")
     HashMap<String, Object> getListPage(HttpServletRequest request) {
         SysMenuVO sysMenuVO = new SysMenuVO();
         sysMenuVO.setText(request.getParameter("text"));
@@ -54,7 +57,7 @@ public class SysMenuController {
      * @Author: xwl
      * @Date: 2020-5-29 15:05
      */
-    @RequestMapping(value = "/getGridListById/{id}")
+    @RequestMapping(value = "/getGridListById/{id}", name = "getGridListById")
     List<SysMenuVO> getListById(@PathVariable("id") Integer id){
         List<SysMenuVO> list=sysMenuService.getGridListById(id);
         return list;
@@ -78,7 +81,7 @@ public class SysMenuController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/saveOrUpdate")
+    @RequestMapping(value = "/saveOrUpdate", name = "menu_saveOrUpdate")
     public BaseResponse saveOrUpdate(@RequestBody SysMenuVO sysMenuVO,HttpServletRequest request) throws CommonServiceException {
         //校验入参
         sysMenuVO.checkParam();
@@ -102,7 +105,7 @@ public class SysMenuController {
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/delete/{id}")
+    @RequestMapping(value = "/delete/{id}", name = "menu_delete")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysMenuService.delete(id);
         if (bool) {
@@ -122,11 +125,22 @@ public class SysMenuController {
     }
 
     /**
+     * @Description: 加载所有角色列表
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/queryRoleList", name = "queryRoleList")
+    public BaseResponse queryRoleList() {
+        List<SysRoleDTO> list = sysRoleService.queryRoleList();
+        return BaseResponse.success(list);
+    }
+
+    /**
      * @Description: 菜单角色授权
      * @Author: XWL
      * @Date: 2020年05月29日
      */
-    @RequestMapping(value = "/menuToRole")
+    @RequestMapping(value = "/menuToRole", name = "menuToRole")
     public BaseResponse menuToRole(@RequestBody SysRoleVO sysRoleVO) throws CommonServiceException {
         //校验入参
         sysRoleVO.menuToRoleCheckParam();

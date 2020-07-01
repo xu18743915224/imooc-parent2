@@ -84,9 +84,17 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenuVO> list=getGridListById(id);
         for(SysMenuVO menu:list){
             this.deleteById(menu.getId());
+            //删除角色菜单表的数据
+            QueryWrapper<SysRoleMenu> wrapper = new QueryWrapper();
+            wrapper.eq("menu_id", menu.getId());
+            sysRoleMenuMapper.delete(wrapper);
         }
         //根据ID删除当前ID菜单
         boolean b=this.deleteById(id);
+        //删除角色菜单表的数据
+        QueryWrapper<SysRoleMenu> wrapper = new QueryWrapper();
+        wrapper.eq("menu_id", id);
+        sysRoleMenuMapper.delete(wrapper);
         return b;
     }
 

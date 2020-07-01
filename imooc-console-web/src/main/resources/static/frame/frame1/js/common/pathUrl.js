@@ -84,7 +84,9 @@ var menu_queryById = basePath + "/console/menu/queryById/";
 //删除
 var menu_delete = basePath + "/console/menu/delete/";
 //根据ID查询树表格
-var menu_getListById = basePath + "/console/menu/getGridListById/";
+var menu_getGridListById = basePath + "/console/menu/getGridListById/";
+//查询所有角色列表
+var menu_queryRoleList= basePath + "/console/menu/queryRoleList";
 //菜单授权角色
 var menu_menuToRole = basePath + "/console/menu/menuToRole";
 //根据角色ID查询角色菜单表数据

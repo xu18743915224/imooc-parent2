@@ -177,7 +177,7 @@
 
         var rows = grid.getSelecteds();
         if (rows.length > 0) {
-            if (confirm("确定删除选中记录？")) {
+            if (confirm("删除该菜单会关联删除子菜单和授权角色的菜单一并删除!确定删除选中记录？")) {
                 var ids = [];
                 for (var i = 0, l = rows.length; i < l; i++) {
                     var r = rows[i];
