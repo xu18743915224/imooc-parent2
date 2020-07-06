@@ -16,7 +16,7 @@
              SELECT menu_id FROM sys_role_menu b WHERE b.role_id IN(
                   SELECT role_id FROM sys_user_role c WHERE c.user_id=#{query.id}
              )
-        )
+        ) order by no asc
     </select>
 
 
