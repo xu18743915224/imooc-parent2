@@ -52,6 +52,9 @@ var permission_permissionToRole = basePath + "/console/permission/permissionToRo
 var permission_queryRolePermissByPermissId= basePath + "/console/permission/queryRolePermissByPermissId/";
 //根据权限ID获取(角色未授权数据)
 var permission_queryNoAuthRoleByPermissId= basePath + "/console/permission/queryNoAuthRoleByPermissId/";
+//-----------------------------------------------权限管理_permission1
+//分页查询
+var permission1_list = basePath + "/console/permission1/getListPage";
 
 //-----------------------------------------------字典管理_dict
 //=====字典类型SysDictType
