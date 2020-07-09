@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>权限管理</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script src="../../../../scripts/boot.js" type="text/javascript"></script>
+    <script src="../../js/common/pathUrl.js" type="text/javascript"></script>
+    <script src="../../js/common/common.js" type="text/javascript"></script>
+    <style type="text/css">
+        html, body {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<input name="id" id="permissionId" class="mini-hidden"/>
+<table >
+    <tr>
+        <td width="5%"></td>
+        <td >
+            角色列表
+            <div id="listbox1" class="mini-listbox"  style="width:400px;height:450px;" onitemclick="clickRoleQueryMenu"
+                 showCheckBox="false" multiSelect="false" >
+                <div property="columns">
+                    <div header="角色ID" field="id"></div>
+                    <div header="角色名称" field="roleName"></div>
+                </div>
+            </div>
+        </td>
+        <td style="width:60px;text-align:center;">
+            &nbsp;&nbsp;&nbsp;
+        </td>
+        <td>
+            菜单树
+            <div class="mini-toolbar" style="width:400px;height:450px;">
+                <div class="mini-fit">
+                    <ul id="tree2" class="mini-tree" style="padding:5px;"
+                        showTreeIcon="true" textField="text" idField="id" parentField="parentId" resultAsTree="false"
+                        showCheckBox="true" checkRecursive="true" autoCheckParent="true" onnodecheck="clickMenuToRole"
+                        onbeforenodecheck="onBeforeNodeCheck" allowSelect="false" enableHotTrack="false">
+                    </ul>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
+</br>
+<div style="text-align:center;padding:10px;">
+    <a class="mini-button" onclick="saveData()" style="width:60px;margin-right:20px;">保存</a>
+</div>
+</br>
+<script type="text/javascript">
+    mini.parse();
+    var listbox1 = mini.get("listbox1");
+    var tree = mini.get("tree2");
+
+    //初始化数据
+    $(function () {
+        init();
+    });
+
+
+    function init() {
+        //加载菜单树
+        loadTree();
+        //加载角色列表
+        getRoleList();
+
+    }
+
+    //加载角色菜单数据显示菜单树
+    function clickRoleQueryMenu(e){
+        tree.setUrl(menu_queryMenuToRoleByRoleId+e.item.id);
+        tree.load();
+        /*$.ajax({
+            url: menu_queryMenuToRoleByRoleId +e.item.id,
+            cache: false,
+            success: function (text) {
+                var o = mini.decode(text);
+                tree.loadData(o);
+            }
+        });*/
+    }
+
+    function clickMenuToRole(){
+        //校验角色列表是否选中
+        var row = listbox1.getSelected();
+        if(!row){
+            alert("先选择角色再操作菜单!");
+            //清空已经选择的菜单复选框数据
+            var tree = mini.get("tree2");
+            var nodes = tree.getAllChildNodes(tree.getRootNode());
+            tree.uncheckNodes(nodes);
+        }
+    }
+
+    //加载tree
+    function loadTree() {
+        tree.setUrl(menu_getGridListById+"0");
+        tree.load();
+    }
+    //--------------------------------
+    function onBeforeNodeCheck(e) {
+        var tree = e.sender;
+        var node = e.node;
+        if (tree.hasChildren(node)) {
+            //e.cancel = true;
+        }
+    }
+
+
+    function saveData() {
+        var row = listbox1.getSelected();
+        var value = tree.getValue(true);
+        var role=new Object();
+        role.id=row.id;
+        role.menus=value;
+        $.ajax({
+            url: menu_menuToRole,
+            type: 'post',
+            data: JSON.stringify(role),
+            contentType: "application/json;charset=utf-8",
+            success: function (text) {
+                if (text.code == 200) {
+                    alert("保存成功!");
+                    parent.patent.init();
+                    //CloseWindow("save");
+                } else {
+                    alert(text.message);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText);
+                CloseWindow();
+            }
+        });
+    }
+
+    function CloseWindow(action) {
+        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+        else window.close();
+    }
+
+    //加载角色列表
+    function getRoleList(){
+        $.ajax({
+            url: menu_queryRoleList,
+            cache: false,
+            success: function (text) {
+                listbox1.addItems(text.data);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

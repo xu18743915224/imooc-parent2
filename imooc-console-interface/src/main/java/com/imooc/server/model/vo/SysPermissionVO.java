@@ -32,6 +32,8 @@ public class SysPermissionVO extends BaseRequest implements Serializable {
     private String updateUser;  //
     private Date updateTime;  //
     private List<SysRoleVO> roleList;
+    private List<SysPermissionVO> children;
+    private boolean checked;
 
     //分页信息
     private int pageSize = 20;

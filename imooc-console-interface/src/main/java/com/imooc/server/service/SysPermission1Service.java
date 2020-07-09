@@ -24,4 +24,23 @@ public interface SysPermission1Service {
     HashMap<String, Object> getListPage(SysPermissionVO sysPermissionVO);
 
 
+    /**
+     * @Description: 新增
+     * @param: SysUser
+     * @return: boolean
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    boolean saveOrUpdate(SysPermission sysPermission,String loginUsername);
+
+    /**
+     * @Description: 根据id删除
+     * @param: [id]
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    boolean delete(Integer id);
+
+    //根据ID查询权限树列表
+    List<SysPermissionVO> getGridListById(Integer id);
 }

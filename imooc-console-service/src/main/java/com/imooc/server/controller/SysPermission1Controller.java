@@ -52,6 +52,53 @@ public class SysPermission1Controller {
         HashMap<String, Object> listPage = sysPermission1Service.getListPage(sysPermissionVO);
         return listPage;
     }
+    /**
+     * @Description: 新增
+     * @return: boolean
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/saveOrUpdate", name = "permission_saveOrUpdate")
+    public BaseResponse saveOrUpdate(@RequestBody SysPermissionVO sysPermissionVO,HttpServletRequest request) throws CommonServiceException {
+        // 校验入参
+        sysPermissionVO.checkParam();
+        //获取Claims
+        Claims claims = (Claims)request.getAttribute("user_claims");
+        String loginUsername=claims.getSubject();//获取登录用户username
+        //赋值
+        SysPermission sysPermission = new SysPermission();
+        BeanUtils.copyProperties(sysPermissionVO, sysPermission);
 
+        boolean bool = sysPermission1Service.saveOrUpdate(sysPermission,loginUsername);
+        if (bool) {
+            return BaseResponse.success();
+        }
+        return BaseResponse.serviceException(new CommonServiceException(500, "保存失败！!"));
+    }
 
+    /**
+     * @Description: 删除
+     * @return: BaseResponse
+     * @Author: XWL
+     * @Date: 2020年05月29日
+     */
+    @RequestMapping(value = "/delete/{id}", name = "permission_delete")
+    public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
+        boolean bool = sysPermission1Service.delete(id);
+        if (bool) {
+            return BaseResponse.success();
+        }
+        return BaseResponse.serviceException(new CommonServiceException(500, "删除失败！!"));
+    }
+
+    /**
+     * @Description: 根据ID查询子列表
+     * @Author: xwl
+     * @Date: 2020-5-29 15:05
+     */
+    @RequestMapping(value = "/getGridListById/{id}", name = "getGridListById")
+    List<SysPermissionVO> getListById(@PathVariable("id") Integer id){
+        List<SysPermissionVO> list=sysPermission1Service.getGridListById(id);
+        return list;
+    }
 }

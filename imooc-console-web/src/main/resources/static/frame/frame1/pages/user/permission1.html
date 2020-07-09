@@ -41,7 +41,7 @@
                     <a class="mini-button" iconCls="icon-add" onclick="add()">新增</a>
                     <a class="mini-button" iconCls="icon-edit" onclick="edit()">编辑</a>
                     <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
-                    <a class="mini-button" iconCls="icon-addnew" onclick="menuToRole()">菜单角色授权</a>
+                    <a class="mini-button" iconCls="icon-addnew" onclick="permissionToRole()">权限角色授权</a>
                 </td>
             </tr>
         </table>
@@ -86,7 +86,7 @@
 
     //加载grid
     function loadGrid() {
-        grid.setUrl(menu_list);
+        grid.setUrl(permission1_list);
         grid.load();
     }
 
@@ -133,7 +133,7 @@
     function add() {
         mini.open({
             targetWindow: window,
-            url: basePath + "/static/frame/frame1/pages/user/menu_add_edit.html",
+            url: basePath + "/static/frame/frame1/pages/user/permission1_add_edit.html",
             title: "新增", width: 600, height: 400,
             onload: function () {
                 var iframe = this.getIFrameEl();
@@ -151,7 +151,7 @@
         var row = grid.getSelected();
         if (row) {
             mini.open({
-                url: basePath + "/static/frame/frame1/pages/user/menu_add_edit.html",
+                url: basePath + "/static/frame/frame1/pages/user/permission1_add_edit.html",
                 title: "编辑", width: 600, height: 400,
                 onload: function () {
                     var iframe = this.getIFrameEl();
@@ -183,7 +183,7 @@
                 var id = ids.join(',');
                 grid.loading("操作中，请稍后......");
                 $.ajax({
-                    url: menu_delete+ id,
+                    url: permission1_delete+ id,
                     success: function (text) {
                         if (text.code == 200) {
                             alert("删除成功!");
@@ -203,11 +203,11 @@
 
     function addChildrenMenu(id) {
         mini.open({
-            url: basePath + "/static/frame/frame1/pages/user/menu_children.html",
-            title: "新增菜单", width: 1000, height: 550,
+            url: basePath + "/static/frame/frame1/pages/user/permission1_children.html",
+            title: "新增权限", width: 1000, height: 550,
             onload: function () {
                 var iframe = this.getIFrameEl();
-                var data = {action: "addChildrenMenu", id: id};
+                var data = {action: "addChildren", id: id};
                 iframe.contentWindow.SetData(data);
 
             },
@@ -218,11 +218,11 @@
         });
     }
 
-    //菜单角色授权
-    function menuToRole() {
+    //权限角色授权
+    function permissionToRole() {
         mini.open({
-            url: basePath + "/static/frame/frame1/pages/user/menu_role_auth.html",
-            title: "角色菜单授权", width: 1000, height: 600,
+            url: basePath + "/static/frame/frame1/pages/user/permission1_role_auth.html",
+            title: "权限菜单授权", width: 1000, height: 600,
             onload: function () {
                 var iframe = this.getIFrameEl();
                 /*var data = {dictType: row.dictType};

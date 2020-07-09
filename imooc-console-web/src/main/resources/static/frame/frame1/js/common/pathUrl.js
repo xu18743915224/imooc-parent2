@@ -55,6 +55,12 @@ var permission_queryNoAuthRoleByPermissId= basePath + "/console/permission/query
 //-----------------------------------------------权限管理_permission1
 //分页查询
 var permission1_list = basePath + "/console/permission1/getListPage";
+//新增
+var permission1_save = basePath + "/console/permission1/saveOrUpdate";
+//删除
+var permission1_delete = basePath + "/console/permission1/delete/";
+//根据ID查询树表格
+var permission1_getGridListById = basePath + "/console/permission1/getGridListById/";
 
 //-----------------------------------------------字典管理_dict
 //=====字典类型SysDictType
