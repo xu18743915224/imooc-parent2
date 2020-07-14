@@ -4,6 +4,7 @@ import com.imooc.server.model.bo.SysPermission;
 import com.imooc.server.model.dto.SysRoleDTO;
 import com.imooc.server.model.dto.SysRolePermissionDTO;
 import com.imooc.server.model.vo.SysPermissionVO;
+import com.imooc.server.model.vo.SysRoleVO;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -43,4 +44,10 @@ public interface SysPermission1Service {
 
     //根据ID查询权限树列表
     List<SysPermissionVO> getGridListById(Integer id);
+
+    //根据角色ID查询角色权限表数据
+    List<SysPermissionVO> queryPermissionToRoleByRoleId(Integer id);
+
+    //权限角色授权
+    boolean permission1_savePermissionToRole(SysRoleVO sysRoleVO);
 }

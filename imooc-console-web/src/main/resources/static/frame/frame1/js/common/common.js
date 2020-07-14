@@ -1,25 +1,7 @@
 //"window.location.href"、"location.href"是本页面跳转
 //"parent.location.href"是上一层页面跳转
 //"top.location.href"是最外层的页面跳转
-$(function () {
-    noTokenToLogin();
-    setInterval(noTokenToLogin(),30000)
-});
-function noTokenToLogin() {
-    $.ajax({
-        url: "/noTokenToLogin",
-        type: 'post',
-        data: {},
-        success: function (text) {
-            if (text.code == 408) {
-                window.top.location.href = user_timeOutPage;
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.responseText);
-        }
-    });
-}
+
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~字典共用方法

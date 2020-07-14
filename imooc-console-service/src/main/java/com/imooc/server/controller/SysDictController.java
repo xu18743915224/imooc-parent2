@@ -35,7 +35,7 @@ public class SysDictController {
      * @Author: xwl
      * @Date: 2020-6-4 16:58
      */
-    @RequestMapping(value = "/getListPageType")
+    @RequestMapping(value = "/getListPageType", name = "dict_getListPageType")
     HashMap<String, Object> getListPageType(HttpServletRequest request) {
         SysDictTypeVO sysDictTypeVO = new SysDictTypeVO();
         sysDictTypeVO.setDictType(request.getParameter("dictType"));
@@ -50,7 +50,7 @@ public class SysDictController {
     }
 
     //根据字典类型type获取字典数据分页list
-    @RequestMapping(value = "/getListPageData")
+    @RequestMapping(value = "/getListPageData", name = "dict_getListPageData")
     HashMap<String, Object> getListPageData(HttpServletRequest request) {
         SysDictDataVO sysDictDataVO = new SysDictDataVO();
         sysDictDataVO.setDictType(request.getParameter("dictType"));
@@ -66,7 +66,7 @@ public class SysDictController {
     }
 
     //新增or保存字典类型
-    @RequestMapping(value = "/saveOrUpdateType")
+    @RequestMapping(value = "/saveOrUpdateType", name = "dict_saveOrUpdateType")
     public BaseResponse saveOrUpdateType(@RequestBody SysDictTypeVO sysDictTypeVO,HttpServletRequest request) throws CommonServiceException {
         //校验入参
         sysDictTypeVO.checkParam();
@@ -82,7 +82,7 @@ public class SysDictController {
     }
 
     //新增or保存字典数据
-    @RequestMapping(value = "/saveOrUpdateData")
+    @RequestMapping(value = "/saveOrUpdateData", name = "dict_saveOrUpdateData")
     public BaseResponse saveOrUpdateData(@RequestBody SysDictDataVO sysDictDataVO,HttpServletRequest request) throws CommonServiceException {
         //校验入参
         sysDictDataVO.checkParam();
@@ -98,7 +98,7 @@ public class SysDictController {
     }
 
     //删除字典类型 关联删除旗下所有字典数据
-    @RequestMapping(value = "/deleteType/{id}")
+    @RequestMapping(value = "/deleteType/{id}", name = "dict_deleteType")
     public BaseResponse delete(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysDictTypeService.deleteType(id);
         if (bool) {
@@ -108,7 +108,7 @@ public class SysDictController {
     }
 
     //根据id删除字典数据
-    @RequestMapping(value = "/deleteData/{id}")
+    @RequestMapping(value = "/deleteData/{id}", name = "dict_deleteData")
     public BaseResponse deleteData(@PathVariable("id") Integer id) throws CommonServiceException {
         boolean bool = sysDictDataService.delete(id);
         if (bool) {

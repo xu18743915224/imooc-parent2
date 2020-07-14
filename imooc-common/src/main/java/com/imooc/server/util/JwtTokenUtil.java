@@ -10,7 +10,8 @@ public class JwtTokenUtil {
     private String key="jwt-key";   //token私匙，自定义就可以
     //签名的失效时间
     //private Long ttl=360000L;       //token过期时间，单位毫秒，这里是6分钟
-    private Long ttl=900000L;       //token过期时间，单位毫秒，这里是15分钟
+    //private Long ttl=900000L;       //token过期时间，单位毫秒，这里是15分钟
+    private Long ttl=60000L;
     /**
      * 设置认证token
      * id:登录用户id

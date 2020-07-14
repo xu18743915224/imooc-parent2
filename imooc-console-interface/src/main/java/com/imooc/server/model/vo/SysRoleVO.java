@@ -29,6 +29,9 @@ public class SysRoleVO extends BaseRequest implements Serializable {
     private String updateUser;  //
     private Date updateTime;  //
     private String menus;
+    private String permissions;
+    private Integer permissionId;
+    private String flag;//是否选中
 
 
     //分页信息
@@ -52,5 +55,9 @@ public class SysRoleVO extends BaseRequest implements Serializable {
             throw new CommonServiceException(404, "角色ID不能为空!");
         }
     }
-
+    public void permissionToRoleCheckParam() throws CommonServiceException {
+        if (id==null) {
+            throw new CommonServiceException(404, "角色ID不能为空!");
+        }
+    }
 }

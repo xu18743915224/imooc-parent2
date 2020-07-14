@@ -74,7 +74,37 @@
 </body>
 </html>
 <script>
-
+    $(function () {
+        noTokenToLogin();
+    });
+    var ref=setInterval(function(){
+        noTokenToLogin()
+    },5000);
+    function noTokenToLogin() {
+        $.ajax({
+            url: "/noTokenToLogin",
+            type: 'post',
+            data: {},
+            success: function (text) {
+                if (text.code == 408) {
+                    //阻止定时刷新
+                    window.clearInterval(ref);
+                    mini.confirm("已超时请重新登陆！", "确定",
+                        function (action) {
+                            if (action == "ok") {
+                                window.top.location.href = user_loginPage;
+                            } else {
+                                window.top.location.href = user_loginPage;
+                            }
+                        }
+                    );
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText);
+            }
+        });
+    }
     function activeTab(item) {
         var tabs = mini.get("mainTabs");
         var tab = tabs.getTab(item.id);

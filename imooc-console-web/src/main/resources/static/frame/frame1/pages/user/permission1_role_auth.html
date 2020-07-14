@@ -23,8 +23,12 @@
 <table >
     <tr>
         <td width="5%"></td>
+    </tr>
+    <tr>
+        <td width="5%"></br></td>
         <td >
-            角色列表
+            <!--<input id="keyRole" class="mini-textbox" emptyText="请输入角色名称" style="width:180px;" onenter="onKeyEnterRole"/>
+            <a class="mini-button" style="width:50px;" onclick="searchRole()">查询</a>-->
             <div id="listbox1" class="mini-listbox"  style="width:400px;height:450px;" onitemclick="clickRoleQueryMenu"
                  showCheckBox="false" multiSelect="false" >
                 <div property="columns">
@@ -37,13 +41,16 @@
             &nbsp;&nbsp;&nbsp;
         </td>
         <td>
-            菜单树
+            <input id="keyPermission" class="mini-textbox" emptyText="请输入权限名称" style="width:180px;" onenter="onKeyEnterPermission"/>
+            <a class="mini-button" style="width:50px;" onclick="searchPermission()">查询</a>&nbsp;
+            <a class="mini-button" style="width:75px;" onclick="tree.collapseAll()">收缩所有</a>
+            <a class="mini-button" style="width:75px;" onclick="tree.expandAll()">展开所有</a>
             <div class="mini-toolbar" style="width:400px;height:450px;">
                 <div class="mini-fit">
                     <ul id="tree2" class="mini-tree" style="padding:5px;"
-                        showTreeIcon="true" textField="text" idField="id" parentField="parentId" resultAsTree="false"
-                        showCheckBox="true" checkRecursive="true" autoCheckParent="true" onnodecheck="clickMenuToRole"
-                        onbeforenodecheck="onBeforeNodeCheck" allowSelect="false" enableHotTrack="false">
+                        showTreeIcon="true" textField="name" idField="id" parentField="pid" resultAsTree="false"
+                        showCheckBox="true" checkRecursive="true" autoCheckParent="true" onnodecheck="savePermissionToRole"
+                        allowSelect="false" enableHotTrack="false">
                     </ul>
                 </div>
             </div>
@@ -51,10 +58,6 @@
         </td>
     </tr>
 </table>
-</br>
-<div style="text-align:center;padding:10px;">
-    <a class="mini-button" onclick="saveData()" style="width:60px;margin-right:20px;">保存</a>
-</div>
 </br>
 <script type="text/javascript">
     mini.parse();
@@ -68,8 +71,6 @@
 
 
     function init() {
-        //加载菜单树
-        loadTree();
         //加载角色列表
         getRoleList();
 
@@ -77,35 +78,10 @@
 
     //加载角色菜单数据显示菜单树
     function clickRoleQueryMenu(e){
-        tree.setUrl(menu_queryMenuToRoleByRoleId+e.item.id);
-        tree.load();
-        /*$.ajax({
-            url: menu_queryMenuToRoleByRoleId +e.item.id,
-            cache: false,
-            success: function (text) {
-                var o = mini.decode(text);
-                tree.loadData(o);
-            }
-        });*/
-    }
-
-    function clickMenuToRole(){
-        //校验角色列表是否选中
-        var row = listbox1.getSelected();
-        if(!row){
-            alert("先选择角色再操作菜单!");
-            //清空已经选择的菜单复选框数据
-            var tree = mini.get("tree2");
-            var nodes = tree.getAllChildNodes(tree.getRootNode());
-            tree.uncheckNodes(nodes);
-        }
-    }
-
-    //加载tree
-    function loadTree() {
-        tree.setUrl(menu_getGridListById+"0");
+        tree.setUrl(permission1_queryPermissionToRoleByRoleId+e.item.id);
         tree.load();
     }
+
     //--------------------------------
     function onBeforeNodeCheck(e) {
         var tree = e.sender;
@@ -115,15 +91,19 @@
         }
     }
 
-
-    function saveData() {
+    function savePermissionToRole(e){
+        var tree = e.sender;
+        var node = e.node;
+        var flag=tree.isCheckedNode ( node )
         var row = listbox1.getSelected();
-        var value = tree.getValue(true);
+
         var role=new Object();
         role.id=row.id;
-        role.menus=value;
+        role.permissionId=node.id;
+        role.flag=flag;
+
         $.ajax({
-            url: menu_menuToRole,
+            url: permission1_savePermissionToRole,
             type: 'post',
             data: JSON.stringify(role),
             contentType: "application/json;charset=utf-8",
@@ -151,13 +131,33 @@
     //加载角色列表
     function getRoleList(){
         $.ajax({
-            url: menu_queryRoleList,
+            url: permission1_queryRoleList,
             cache: false,
             success: function (text) {
                 listbox1.addItems(text.data);
             }
         });
     }
+
+
+    function searchPermission() {
+        var key = mini.get("keyPermission").getValue();
+        if (key == "") {
+            tree.clearFilter();
+        } else {
+            key = key.toLowerCase();
+            tree.filter(function (node) {
+                var text = node.name ? node.name.toLowerCase() : "";
+                if (text.indexOf(key) != -1) {
+                    return true;
+                }
+            });
+        }
+    }
+    function onKeyEnterPermission(e) {
+        searchPermission();
+    }
+
 
 </script>
 </body>

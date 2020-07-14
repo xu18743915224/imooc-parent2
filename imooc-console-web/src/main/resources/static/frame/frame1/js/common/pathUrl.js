@@ -61,6 +61,13 @@ var permission1_save = basePath + "/console/permission1/saveOrUpdate";
 var permission1_delete = basePath + "/console/permission1/delete/";
 //根据ID查询树表格
 var permission1_getGridListById = basePath + "/console/permission1/getGridListById/";
+//根据角色ID查询角色权限表数据
+var permission1_queryPermissionToRoleByRoleId = basePath + "/console/permission1/queryPermissionToRoleByRoleId/";
+//查询所有角色列表
+var permission1_queryRoleList= basePath + "/console/permission1/queryRoleList";
+//权限授权角色
+var permission1_savePermissionToRole = basePath + "/console/permission1/savePermissionToRole";
+
 
 //-----------------------------------------------字典管理_dict
 //=====字典类型SysDictType

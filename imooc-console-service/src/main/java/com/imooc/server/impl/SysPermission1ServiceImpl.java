@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.imooc.server.exception.CommonServiceException;
 import com.imooc.server.mapper.SysPermissionMapper;
 import com.imooc.server.mapper.SysRolePermissionMapper;
 import com.imooc.server.mapper.SysUserRoleMapper;
@@ -24,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -136,12 +134,7 @@ public class SysPermission1ServiceImpl extends ServiceImpl<SysPermissionMapper, 
         return result;
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~权限表格grid树end
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单start
-    /*@Override
-    public List<SysPermissionVO> getTreeById(Integer id) {
-        return getListById(id);
-    }*/
-
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~权限start
     public List<SysPermissionVO> getListById(Integer id) {
         //组装查询数据
         QueryWrapper<SysPermission> wrapper = new QueryWrapper<>();
@@ -184,5 +177,127 @@ public class SysPermission1ServiceImpl extends ServiceImpl<SysPermissionMapper, 
         }
         return permissionVOs;
     }
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~菜单end
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~权限end
+
+    @Override
+    public List<SysPermissionVO> queryPermissionToRoleByRoleId(Integer id) {
+        List<SysPermissionVO> permissionVOs=new ArrayList<>();
+        QueryWrapper<SysPermission> wrapper1 = new QueryWrapper<>();
+        List<SysPermission> permissionList = sysPermissionMapper.selectList(wrapper1);
+
+        QueryWrapper<SysRolePermission> wrapper2 = new QueryWrapper<>();
+        wrapper2.eq("role_id",id);
+        List<SysRolePermission> rolePermissionList = sysRolePermissionMapper.selectList(wrapper2);
+        if(permissionList!=null&&permissionList.size()>0){
+            for(SysPermission permission:permissionList){
+                //赋值
+                SysPermissionVO permissionVO=new SysPermissionVO();
+                BeanUtils.copyProperties(permission,permissionVO);
+                if(rolePermissionList!=null&&rolePermissionList.size()>0){
+                    for(SysRolePermission rolePermission:rolePermissionList){
+                        if(permission.getId().equals(rolePermission.getPermissionId())){
+                            permissionVO.setChecked(true);
+                        }
+                    }
+                }
+                permissionVOs.add(permissionVO);
+            }
+        }
+        return permissionVOs;
+    }
+
+    @Override
+    public boolean permission1_savePermissionToRole(SysRoleVO sysRoleVO) {
+        if(sysRoleVO.getId()==null||sysRoleVO.getPermissionId()==null){
+            new CommonServiceException(500, "保存失败！角色ID或权限ID不能为空!");
+        }
+        QueryWrapper<SysPermission> wrapper1 = new QueryWrapper<>();
+        List<SysPermission> permissionList = sysPermissionMapper.selectList(wrapper1);
+
+        List<Integer> idList=new ArrayList<>();
+        idList.add(sysRoleVO.getPermissionId());
+
+        //根据选中节点向下看是否有子节点如果有全部选中
+        loopDownEach(sysRoleVO.getPermissionId(),idList,permissionList);
+
+        //判断是选中框赋权 还是取消框赋权(取消赋权不需要关联向上查询父)
+        if("true".equals(sysRoleVO.getFlag())){
+            //根据选中节点向上看是否有父节点如果有全部选中(如果父节点存在既不操作)
+            QueryWrapper<SysPermission> wrapper2 = new QueryWrapper<>();
+            SysPermission permission = sysPermissionMapper.selectById(sysRoleVO.getPermissionId());
+            loopUpEach(permission.getPid(),idList,permissionList);
+        }
+
+        //根据role获取数据库所已经拥有的权限
+        QueryWrapper<SysRolePermission> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",sysRoleVO.getId());
+        List<SysRolePermission> sysRolePermissions = sysRolePermissionMapper.selectList(wrapper);
+        if(sysRolePermissions!=null&&sysRolePermissions.size()>0 ) {
+            List<Integer> deleteIdList=new ArrayList<>();
+            for(int i=0;i<idList.size();i++){
+                Integer permissionId=idList.get(i);
+                for (SysRolePermission sysRolePermission : sysRolePermissions) {
+                    //取消赋权
+                    if("false".equals(sysRoleVO.getFlag())){
+                        if(permissionId==sysRolePermission.getPermissionId()){
+                            sysRolePermissionMapper.deleteById(sysRolePermission.getId());
+                        }
+                    }
+                    if("true".equals(sysRoleVO.getFlag())){
+                        if (permissionId == sysRolePermission.getPermissionId()) {
+                            deleteIdList.add(permissionId);
+                        }
+                    }
+                }
+            }
+            //选中赋权
+            if(deleteIdList!=null&&deleteIdList.size()>0){
+                for(Integer i:deleteIdList){
+                    idList.remove(i);
+                }
+            }
+            if("true".equals(sysRoleVO.getFlag())){
+                for (Integer permissionId : idList) {
+                    SysRolePermission rolePermission=new SysRolePermission();
+                    rolePermission.setRoleId(sysRoleVO.getId());
+                    rolePermission.setPermissionId(permissionId);
+                    sysRolePermissionMapper.insert(rolePermission);
+                }
+            }
+            //没有曾经赋值过权限新增
+        }else{
+            for(Integer permissionId:idList){
+                //选中赋权
+                if("true".equals(sysRoleVO.getFlag())){
+                    SysRolePermission rolePermission=new SysRolePermission();
+                    rolePermission.setRoleId(sysRoleVO.getId());
+                    rolePermission.setPermissionId(permissionId);
+                    sysRolePermissionMapper.insert(rolePermission);
+                }
+            }
+        }
+        return true;
+    }
+
+    private void loopDownEach(Integer permissionId,List<Integer> idList,List<SysPermission> lists){
+        for(SysPermission permission:lists){
+            if(permission.getPid().equals(permissionId)){
+                idList.add(permission.getId());
+            }else{
+                continue;
+            }
+            loopDownEach(permission.getId(),idList,lists);
+        }
+    }
+
+    private void loopUpEach(Integer pid,List<Integer> idList,List<SysPermission> lists){
+        for(SysPermission permission:lists){
+            if(permission.getId().equals(pid)){
+                idList.add(permission.getId());
+            }else{
+                continue;
+            }
+            loopUpEach(permission.getPid(),idList,lists);
+        }
+    }
 }
